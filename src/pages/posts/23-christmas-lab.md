@@ -8,7 +8,7 @@ imgAlt: "VNC logo"
 
 # Headless Server with VNC Remote Control
 
-圣诞节快乐🎉, 当然要同时布置一些好玩的内容来提升孩子们的水平, 现在我就来记录整个完成的过程与解答吧
+圣诞节快乐🎉, 这是一个关于远程linux桌面的内容
 
 ## 实验内容
 
@@ -35,7 +35,7 @@ noVNC是一个开源项目，提供了一种通过Web浏览器访问远程桌面
 
 ```bash
 ➜  ~ neofetch 
-       _,met$$$$$gg.          root@lab.nkd.red 
+       _,met$$$$$gg.          root@lab.oo0o.ooo 
     ,g$$$$$$$$$$$$$$$P.       ---------------------------------- 
   ,g$$P"     """Y$$.".        OS: Debian GNU/Linux 12 (bookworm) x86_64 
  ,$$P'              `$$$.     Host: OpenStack Nova 23.0.2 
