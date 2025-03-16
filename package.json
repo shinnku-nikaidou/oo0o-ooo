@@ -14,25 +14,32 @@
     "@astrojs/mdx": "^1.1.5",
     "@astrojs/react": "^3.6.3",
     "@astrojs/rss": "^3.0.0",
-    "@astrojs/tailwind": "^5.1.5",
+    "@astrojs/tailwind": "^6.0.0",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@tailwindcss/vite": "^4.0.14",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "astro": "^3.6.5",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "date-fns": "^2.30.0",
     "katex": "^0.16.21",
+    "lucide-react": "^0.482.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "rehype-katex": "^7.0.1",
     "remark": "^15.0.1",
     "remark-math": "^5.1.1",
     "remark-toc": "^9.0.0",
+    "tailwind-merge": "^3.0.2",
+    "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.8.2",
     "zustand": "^4.5.6"
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/typography": "^0.5.16",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^4.0.14"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

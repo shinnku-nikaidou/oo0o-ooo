@@ -1,6 +1,7 @@
 import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
+import tailwindcss from "@tailwindcss/vite";
 import mdx from "@astrojs/mdx";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -9,7 +10,7 @@ import remarkToc from "remark-toc";
 // https://astro.build/config
 export default defineConfig({
   // Enable React to support React JSX components.
-  site: "https://nkd.red",
+  site: "https://oo0o.ooo",
   compressHTML: true,
   integrations: [react(), tailwind(), mdx()],
   markdown: {
@@ -38,6 +39,7 @@ export default defineConfig({
     ],
   },
   vite: {
+    plugins: [tailwindcss()],
     server: {
       allowedHosts: ["oo0o.ooo", "localhost"],
     },
