@@ -2,7 +2,7 @@
 import { Footer } from "@/partials/Footer";
 import { Navbar } from "@/components/Navbar";
 import { AppConfig } from "@/utils/AppConfig";
-import ThemeIcon from "@/components/ThemeIcon.astro";
+// import ThemeIcon from "@/components/ThemeIcon.astro";
 
 export interface Props {
   head: {
@@ -35,7 +35,7 @@ const {
   </head>
   <body>
     <Navbar />
-    <ThemeIcon />
+    <!-- <ThemeIcon /> -->
 
     <slot />
 
@@ -85,4 +85,18 @@ const {
     document.body.scrollTop = 0; // 对于 Safari
     document.documentElement.scrollTop = 0; // 对于 Chrome, Firefox, IE 和 Opera
   };
+
+  // 创建媒体查询对象
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+  // 定义更新主题状态的函数
+  const updateTheme = (e: { matches: boolean | undefined }) => {
+    document.documentElement.classList.toggle("dark", e.matches);
+  };
+
+  // 绑定事件监听器，当系统主题发生变化时触发
+  mediaQuery.addEventListener("change", updateTheme);
+
+  // 页面加载时设置初始状态
+  document.documentElement.classList.toggle("dark", mediaQuery.matches);
 </script>

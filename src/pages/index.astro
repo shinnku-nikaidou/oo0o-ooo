@@ -1,22 +1,31 @@
 ---
-import "@/styles/index.css";
+import "@/styles/global.css";
+// Component Imports
+import Button from "@/components/Button.astro";
 
 // Full Astro Component Syntax:
-// https://docs.astro.build/core-concepts/astro-components/
+// https://docs.astro.build/basics/astro-components/
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/shinnku.jpg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Shinnku's blog</title>
   </head>
-  <body>
-    <main>
+
+  <body
+    ><main>
       <div><a href="/posts">posts</a></div>
       <div><a href="/counter">counter</a></div>
       <div><a href="/intro">intro</a></div>
+      <div class="grid place-items-center h-screen content-center">
+        <Button>Celebration Button!</Button>
+        <a href="/markdown-page" class="p-4 underline">This is shinnku's blog</a
+        >
+      </div>
     </main>
   </body>
 </html>

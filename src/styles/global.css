@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/aspect-ratio";
+@plugin "@tailwindcss/typography";
+
+html.dark {
+  background-color: #000000;
+  /* color: #fff; */
+}
+
+.dark .nav-links a {
+  color: #fff;
+}
