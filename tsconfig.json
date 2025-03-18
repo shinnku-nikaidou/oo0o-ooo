@@ -12,7 +12,7 @@
       "@types": ["./src/types/index"],
       "@types/*": ["./src/types/*"],
       "@utils": ["./src/utils/index"],
-      "@utils/*": ["./src/utils/*"],
+      "@utils/*": ["./src/utils/*"]
     }
   }
 }
