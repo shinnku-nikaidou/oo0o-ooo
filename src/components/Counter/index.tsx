@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import "./Counter.css";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
