@@ -6,7 +6,7 @@ const CTA = () => (
     <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
       <div className="sm:w-7/12">
         <div className="text-3xl font-bold">
-          感谢你能看到这里 by<GradientText> Shinnku </GradientText>
+          Thanks for reading this far by<GradientText> Shinnku </GradientText>
         </div>
       </div>
 

@@ -8,30 +8,30 @@ imgAlt: "VNC logo"
 
 # Headless Server with VNC Remote Control
 
-圣诞节快乐🎉, 这是一个关于远程linux桌面的内容
+Merry Christmas 🎉. This post covers how to access a Linux desktop remotely.
 
-## 实验内容
+## Experiment Outline
 
-购买一个服务器并且安装桌面（gnome，plasma，mate，xfce)，使用vncserver（推荐tigervnc）运行在服务器上，分别使用novnc（运行在服务器上）和VNC viewer（推荐real vnc viewer或者Remmina）链接到服务器的远程桌面.
+Purchase a server and install a desktop environment (gnome, plasma, mate or xfce). Run vncserver (tigervnc recommended) on the server, then connect using novnc (running on the server) or a VNC viewer such as RealVNC Viewer or Remmina.
 
-## 准备
+## Preparation
 
-### vnc是什么
+### What is VNC
 
-VNC（Virtual Network Computing）是一种图形桌面共享系统，它使用远程帧缓冲协议（RFB）来控制另一台计算机的屏幕。通过VNC，用户可以远程查看和操作另一台计算机的桌面界面，就好像坐在前面一样，这使得它成为远程工作、技术支持和教育等多种场合的理想工具。
+VNC (Virtual Network Computing) is a graphical desktop-sharing system that uses the Remote Framebuffer (RFB) protocol to control another computer's screen. It lets you view and operate a remote desktop as if you were in front of it, making it ideal for remote work, tech support and education.
 
-### vnc有什么用
+### Why use VNC
 
-如上所说, vnc配合桌面图形软件将整个只能无聊输入命令行的服务器, 变成了一台真正的云个人电脑 (没声音的)
+As mentioned above, combining VNC with a desktop environment turns an otherwise command-line-only server into a real cloud PC (albeit without sound).
 
-### noVNC是什么, 为什么需要它
+### What is noVNC and why use it
 
-noVNC是一个开源项目，提供了一种通过Web浏览器访问远程桌面的方式。它实现了VNC（Virtual Network Computing）客户端，使用HTML5的WebSockets和Canvas技术。简而言之，noVNC允许用户**不需要安装任何额外软件**，只需通过现代Web浏览器即可连接和控制远程计算机.
-而且配合最基础的普通代理, 由于协议从vnc被转换成了wss, 访问*云电脑*的速度也能飞一般的提升, 而不是卡卡的感觉了.
+noVNC is an open source project that lets you access a remote desktop through a web browser. It implements a VNC client using HTML5 WebSockets and Canvas. In short, you can connect and control a remote computer with a modern browser and no extra software.
+Using even a basic proxy, converting VNC to WSS makes the cloud PC feel much faster instead of sluggish.
 
-### 前期配置
+### Initial setup
 
-一台云服务器, 这里使用 debian
+A cloud server—Debian in this example
 
 ```bash
 ➜  ~ neofetch
@@ -54,38 +54,38 @@ noVNC是一个开源项目，提供了一种通过Web浏览器访问远程桌面
               `"""
 ```
 
-## 操作记录
+## Walkthrough
 
-### 安装桌面系统
+### Install the desktop environment
 
-以 `xfce` 为例子, 先安装桌面系统 (嗨呀, 都看到这里了, 记得收藏真红姐姐的站点)
+Take `xfce` as an example and install the desktop first (since you've read this far, be sure to bookmark Shinnku's site!)
 
 ```bash
 sudo apt update && sudo apt -y upgrade
 sudo apt install -y tasksel
 
-# 如果您是ubuntu系统, 可以直接 (诶, 我不是在用debian吗)
+# If you're on Ubuntu you can simply run (wait, aren't we using Debian?)
 sudo tasksel install xubuntu-desktop
 
-# 如果是其他系统(包括ubuntu)
+# If you're on another system (including Ubuntu)
 sudo tasksel
-# 然后选中 xfce, 按下 enter
+# Then choose xfce and press Enter
 
 sudo apt install gtk2-engines
 ```
 
-### 记录vnc的安装
+### Installing vncserver
 
-#### 无用的内容
+#### Extra steps you can ignore
 
-下面是一些无用的内容, 感兴趣的同学也可以猜猜是做了啥
+Here are some unnecessary commands—see if you can guess what they do
 
 ```bash
 export LIBGL_ALWAYS_INDIRECT=1
 sudo /etc/init.d/dbus start &> /dev/null
 ```
 
-把这段话写进 `~/.bashrc` 或者 `~/.zshrc` 里面.
+Put the snippet above into `~/.bashrc` or `~/.zshrc`.
 
 You can also create a file called `/etc/sudoers.d/dbus` and add the following in it using your username
 
@@ -101,7 +101,7 @@ This does come with risks but it should be **ok** for most.
 apt install tigervnc-standalone-server tigervnc-xorg-extension tigervnc-scraping-server
 ```
 
-这是 vncserver 的 help (摆在这里假装博客内容很多):
+Below is the `vncserver` help output (pasted here to make the post look longer):
 
 ```bash
 ➜  ~ vncserver --help
@@ -169,7 +169,7 @@ vncserver usage:
 
 ```
 
-接下来, 输入
+Next, run
 
 ```bash
 ➜  ~ vncserver -localhost no
@@ -186,26 +186,26 @@ New Xtigervnc server 'lab.nkd.red:1 (root)' on port 5901 for display :1.
 Use xtigervncviewer -SecurityTypes VncAuth,TLSVnc -passwd /tmp/tigervnc.TJqJuC/passwd lab.nkd.red:1 to connect to the VNC server.
 ```
 
-然后就是展示成果的时候:
+And now the result:
 
-![macos的 vnc viewer 软件界面](/img/posts/23-christmas-lab/vnc-1.jpg)
+![Screenshot of the VNC viewer on macOS](/img/posts/23-christmas-lab/vnc-1.jpg)
 
-macos的 vnc viewer 软件界面
+Screenshot of the VNC viewer on macOS
 
 ---
 
-![与服务器的 vnc server 连接成功](/img/posts/23-christmas-lab/vnc-2.jpg)
+![Connected to the server's VNC instance](/img/posts/23-christmas-lab/vnc-2.jpg)
 
-与服务器的 vnc server 连接成功
+Connected to the server's VNC instance
 
-## 安装 novnc
+## Install noVNC
 
 [https://github.com/novnc/noVNC](https://github.com/novnc/noVNC)
 
-先clone `git clone https://github.com/novnc/noVNC.git` .
-进入目录 `cd noVNC`
+First clone with `git clone https://github.com/novnc/noVNC.git`.
+Then run `cd noVNC`
 
-### 安装nodejs以及pnpm
+### Install nodejs and pnpm
 
 ```bash
 curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
@@ -214,22 +214,22 @@ curl -fsSL https://get.pnpm.io/install.sh | sh -
 source /root/.zshrc # source /root/.bashrc
 ```
 
-### 编译noVNC
+### Build noVNC
 
-呵呵, 虽然上面安装了 pnpm , 但是我们还是使用 npm, 不要问我为什么
+Even though we installed pnpm above, we'll still use npm—don't ask why.
 
 ```bash
 npm i
 npm run lint
 npm run prepublish
 
-# 安装 numpy 加速 novnc
+# Install numpy to speed up noVNC
 apt install python3-numpy
 ```
 
-## 运行
+## Run noVNC
 
-假设你的 vncserver 运行在 5901 上面.
+Assume your vncserver is running on port 5901.
 
 ```bash
 ➜  noVNC git:(master) ✗ ./utils/novnc_proxy --vnc localhost:5901 --listen 0.0.0.0:8080
@@ -247,22 +247,22 @@ Navigate to this URL:
 Press Ctrl-C to exit
 ```
 
-我的url就稍微改写成 `http://lab.nkd.red:8080/vnc.html?host=lab.nkd.red&port=8080` , 浏览器输入进入
+I modified the URL to `http://lab.nkd.red:8080/vnc.html?host=lab.nkd.red&port=8080` and opened it in a browser
 
 ![novnc-1](/img/posts/23-christmas-lab/novnc-1.jpg)
 
-网页当中成功打开, 并且很流畅再也不卡卡.
+The page opened successfully and felt very smooth.
 
-**记得左边的setting里面改成 remote resizing, 还有学会使用 clipboard, 很有帮助**.
+**Remember to enable remote resizing in the settings and learn to use the clipboard—it helps a lot.**
 
-### 好玩的
+### Fun stuff
 
-看图即秒懂
+The picture says it all
 
 ![novnc-2](/img/posts/23-christmas-lab/novnc-2.jpg)
-无限巡回长廊.
+An endless hallway loop.
 
-## 给 noVNC 配置 ssl (选做)
+## Configure noVNC with SSL (optional)
 
 ### install certbot
 
@@ -278,7 +278,7 @@ mkdir -p .secrets/certbot
 vim .secrets/certbot/cloudflare.ini
 ```
 
-内容具体应该如下, 请在你的cloudflare账户里面找到My Profile -> API Tokens -> 编辑区域DNS api, 然后填进去
+The contents should be similar to the following. Retrieve your Cloudflare API token via My Profile -> API Tokens -> Edit DNS Zone and paste it here.
 
 ```ini
 # Cloudflare API token used by Certbot
@@ -289,32 +289,32 @@ dns_cloudflare_api_token = xxxXXxxxxxXxxxxxxXxx-w-xxxx-XxxxxX
 chmod 600 ~/.secrets/certbot/*
 ```
 
-接下来就是给域名签名, 我的域名是 `lab.nkd.red`
+Next we sign the certificate for my domain `lab.nkd.red`
 
-### 泛域名解析的签名
+### Wildcard certificate
 
-下面用 `nkd.red, *.nkd.red` 域名作为示范.
+Here we use `nkd.red, *.nkd.red` as an example.
 
-一句命令就签名了, 啥都不需要
+One command takes care of it—nothing else required
 
 ```bash
 certbot certonly --dns-cloudflare --dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini --dns-cloudflare-propagation-seconds 30 -d \*.nkd.red -d nkd.red
 ```
 
-这条命令是使用Certbot（一个免费的证书管理工具，用于自动化Let's Encrypt SSL证书的获取和续期）来获取SSL/TLS证书，特别是为了使用Cloudflare的DNS记录进行域名验证。下面是命令的逐部分解释：
+This command uses Certbot—a free certificate management tool for automating Let's Encrypt SSL certificates—to obtain an SSL/TLS certificate via Cloudflare's DNS records. The options are explained below:
 
-1. `certbot certonly`: 这是Certbot的一个子命令，用于获取或更新证书，但不会自动配置Web服务器（即只获取证书）。
-2. `--dns-cloudflare`: 这指定了Certbot应该使用DNS方式验证域名所有权，并且使用的是Cloudflare的DNS API。这意味着Certbot将通过Cloudflare的API自动添加DNS记录来证明你控制了域名。
-3. `--dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini`: 这指定了存储Cloudflare API凭据的文件路径。这个文件应该包含用于访问Cloudflare API的必要凭据，通常是你的API密钥。
-4. `--dns-cloudflare-propagation-seconds 30`: DNS记录更新后，全球的DNS服务器需要时间来“传播”或更新这些信息。这个参数告诉Certbot在继续之前等待30秒，以便DNS更改有足够的时间传播。这有助于避免验证失败。
-5. `-d *.nkd.red`: 这指定了要为其获取证书的域名。在这里，`*.nkd.red`表示一个通配符证书，它将为 `nkd.red` 域下的所有子域名（如`www.nkd.red`, `mail.nkd.red`等）提供SSL保护。
-6. `-d nkd.red:` 这同样指定了要为其获取证书的域名，这次是根域 `nkd.red`。
+1. `certbot certonly`: obtain or renew the certificate without configuring the web server.
+2. `--dns-cloudflare`: use Cloudflare's DNS API for domain ownership verification.
+3. `--dns-cloudflare-credentials ~/.secrets/certbot/cloudflare.ini`: path to your Cloudflare API credentials.
+4. `--dns-cloudflare-propagation-seconds 30`: wait 30 seconds for DNS records to propagate.
+5. `-d *.nkd.red`: request a wildcard certificate for `*.nkd.red`.
+6. `-d nkd.red`: also request a certificate for the root domain `nkd.red`.
 
-综合来看，这条命令的作用是使用Certbot通过Cloudflare的DNS API为nkd.red域及其所有子域名获取一个通配符SSL/TLS证书。它利用DNS记录验证域名所有权，并等待30秒以确保DNS记录的全球传播。这样做的好处是能够为一个域及其所有子域提供SSL/TLS保护，而无需为每个子域单独获取和配置证书。
+In short, the command obtains a wildcard SSL/TLS certificate for nkd.red and all its subdomains using Certbot and the Cloudflare DNS API. It verifies domain ownership via DNS and waits 30 seconds for propagation, allowing one certificate to secure every subdomain.
 
 (generated by ChatGPT 4)
 
-当然如果您的域名并不在cloudflare上面, 而是dnspod以及其它, 请使用手动 DNS 验证:
+If your domain isn't on Cloudflare (for example if you use DNSPod or another provider), perform manual DNS verification instead:
 
 ```bash
 certbot certonly --manual \
@@ -326,7 +326,7 @@ certbot certonly --manual \
   -d "*.nkd.red"
 ```
 
-并遵照命令输出的指示进行之后的步骤
+Follow the prompts to complete the process
 
 ### run noVNC with ssl
 
@@ -342,7 +342,7 @@ An example command would be on port 8443:
   --key /etc/letsencrypt/live/nkd.red/privkey.pem
 ```
 
-然后访问: `https://lab.nkd.red:8443/vnc.html?host=lab.nkd.red&port=8443` 即可.
+Then visit `https://lab.nkd.red:8443/vnc.html?host=lab.nkd.red&port=8443`.
 
 ![novnc-3](/img/posts/23-christmas-lab/novnc-3.jpg)
 

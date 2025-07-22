@@ -30,7 +30,7 @@ export default function CounterMain({ children }: { children: JSX.Element }) {
 
   const add = () => setCount(count + 1);
   const subtract = () => {
-    alert("我就不让你一直点减");
+    alert("No more clicking minus!");
     setCount(count - 1);
   };
 

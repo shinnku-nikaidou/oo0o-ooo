@@ -68,32 +68,35 @@ const {
 <script>
   const backToTopButton = document.getElementById("backToTop")!;
 
-  // 当用户滚动页面时
+  // When the user scrolls the page
   window.onscroll = function () {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    if (
+      document.body.scrollTop > 20 ||
+      document.documentElement.scrollTop > 20
+    ) {
       backToTopButton.style.display = "block";
     } else {
       backToTopButton.style.display = "none";
     }
   };
 
-  // 当用户点击按钮时
+  // When the user clicks the button
   backToTopButton.onclick = function () {
-    document.body.scrollTop = 0; // 对于 Safari
-    document.documentElement.scrollTop = 0; // 对于 Chrome, Firefox, IE 和 Opera
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
   };
 
-  // 创建媒体查询对象
+  // Create a media query
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-  // 定义更新主题状态的函数
+  // Function to update the theme state
   const updateTheme = (e) => {
     document.documentElement.classList.toggle("dark", e.matches);
   };
 
-  // 绑定事件监听器，当系统主题发生变化时触发
+  // Listen for system theme changes
   mediaQuery.addEventListener("change", updateTheme);
 
-  // 页面加载时设置初始状态
+  // Set the initial state on page load
   document.documentElement.classList.toggle("dark", mediaQuery.matches);
 </script>

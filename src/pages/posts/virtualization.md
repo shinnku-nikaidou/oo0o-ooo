@@ -8,7 +8,7 @@ imgAlt: "virtualization configuration"
 
 # virtualization configuration
 
-市面上有非常多的容器以及虚拟化运维技术, 这篇文章记载掌握各个常见的命令, 一遍以后配置机器的时候忘掉.
+There are plenty of container and virtualization management tools. This article records common commands so you won't forget them when configuring machines later.
 
 ## 1. lxd and lxc container
 
@@ -26,6 +26,6 @@ sudo adduser shinnku libvirt
 sudo adduser shinnku libvirt-qemu
 ```
 
-`virt-install` 和 `virt-manager` 是两种常用的工具，用于在Linux上管理KVM虚拟机。
+`virt-install` and `virt-manager` are two popular tools for managing KVM virtual machines on Linux.
 
-`virt-install` 是一个命令行工具，用于创建和配置虚拟机，而`virt-manager`提供了一个图形界面，使得虚拟机的管理更为直观易用。
+`virt-install` is a command line utility for creating and configuring VMs, while `virt-manager` provides a graphical interface that makes management more intuitive.
