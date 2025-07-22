@@ -34,4 +34,3 @@ within this repo unless overridden by explicit user instructions.
 - Use short, present‑tense statements in commit messages,
   e.g. `Add Navbar component` or `Fix build error`.
 - The first line should be under 72 characters.
-

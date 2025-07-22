@@ -9,7 +9,9 @@ type IPostHeaderProps = {
 
 const PostHeader = (props: IPostHeaderProps) => (
   <>
-    <h1 className="text-center text-3xl font-bold text-gray-600">{props.content.title}</h1>
+    <h1 className="text-center text-3xl font-bold text-gray-600">
+      {props.content.title}
+    </h1>
 
     <div className="mt-2 text-center text-sm text-gray-400">
       By {props.author} on{" "}

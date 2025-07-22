@@ -29,4 +29,3 @@ sudo adduser shinnku libvirt-qemu
 `virt-install` 和 `virt-manager` 是两种常用的工具，用于在Linux上管理KVM虚拟机。
 
 `virt-install` 是一个命令行工具，用于创建和配置虚拟机，而`virt-manager`提供了一个图形界面，使得虚拟机的管理更为直观易用。
-

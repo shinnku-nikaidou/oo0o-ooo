@@ -17,8 +17,8 @@ const useCounterState = create<CounterState>()(
     {
       name: "home-count", // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
-    }
-  )
+    },
+  ),
 );
 
 export default function CounterMain({ children }: { children: JSX.Element }) {

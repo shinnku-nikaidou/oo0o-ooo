@@ -34,23 +34,23 @@ noVNC是一个开源项目，提供了一种通过Web浏览器访问远程桌面
 一台云服务器, 这里使用 debian
 
 ```bash
-➜  ~ neofetch 
-       _,met$$$$$gg.          root@lab.oo0o.ooo 
-    ,g$$$$$$$$$$$$$$$P.       ---------------------------------- 
-  ,g$$P"     """Y$$.".        OS: Debian GNU/Linux 12 (bookworm) x86_64 
- ,$$P'              `$$$.     Host: OpenStack Nova 23.0.2 
-',$$P       ,ggs.     `$$b:   Kernel: 6.1.0-10-amd64 
-`d$$'     ,$P"'   .    $$$    Uptime: 44 days, 6 hours, 10 mins 
- $$P      d$'     ,    $$P    Packages: 934 (dpkg) 
- $$:      $$.   -    ,d$$'    Shell: zsh 5.9 
- $$;      Y$b._   _,d$P'      Resolution: 1024x768 
- Y$$.    `.`"Y$$$$P"'         Terminal: /dev/pts/0 
- `$$b      "-.__              CPU: Intel Xeon E5-2696 v4 (1) @ 2.199GHz 
-  `Y$$                        GPU: 00:02.0 Cirrus Logic GD 5446 
-   `Y$$.                      Memory: 247MiB / 1967MiB 
+➜  ~ neofetch
+       _,met$$$$$gg.          root@lab.oo0o.ooo
+    ,g$$$$$$$$$$$$$$$P.       ----------------------------------
+  ,g$$P"     """Y$$.".        OS: Debian GNU/Linux 12 (bookworm) x86_64
+ ,$$P'              `$$$.     Host: OpenStack Nova 23.0.2
+',$$P       ,ggs.     `$$b:   Kernel: 6.1.0-10-amd64
+`d$$'     ,$P"'   .    $$$    Uptime: 44 days, 6 hours, 10 mins
+ $$P      d$'     ,    $$P    Packages: 934 (dpkg)
+ $$:      $$.   -    ,d$$'    Shell: zsh 5.9
+ $$;      Y$b._   _,d$P'      Resolution: 1024x768
+ Y$$.    `.`"Y$$$$P"'         Terminal: /dev/pts/0
+ `$$b      "-.__              CPU: Intel Xeon E5-2696 v4 (1) @ 2.199GHz
+  `Y$$                        GPU: 00:02.0 Cirrus Logic GD 5446
+   `Y$$.                      Memory: 247MiB / 1967MiB
      `$$b.
-       `Y$$b.                                         
-          `"Y$b._                                     
+       `Y$$b.
+          `"Y$b._
               `"""
 ```
 
@@ -65,7 +65,7 @@ sudo apt update && sudo apt -y upgrade
 sudo apt install -y tasksel
 
 # 如果您是ubuntu系统, 可以直接 (诶, 我不是在用debian吗)
-sudo tasksel install xubuntu-desktop 
+sudo tasksel install xubuntu-desktop
 
 # 如果是其他系统(包括ubuntu)
 sudo tasksel
@@ -111,7 +111,7 @@ vncserver usage:
      -help                   if specified, dumps this help message.
      -h                      is an alias for help.
      -?                      is an alias for help.
-  
+
   To start a VNC server use vncserver [options] [-- session]
     [:<number>]              specifies the X11 display to be used.
     [-display <value>]       is an alias for :<number>.
@@ -145,7 +145,7 @@ vncserver usage:
     [-fp <value>]            specifies a colon separated list of font locations.
     [Xtigervnc options...]   For details, see Xtigervnc(1).
     [-- <session>]           specifies the X11 session to start with either a command or a session name.
-  
+
   To list all active VNC servers of the user use vncserver
      -list                   if provided, all active VNC servers of the user are listed.
     [:<number>]              specifies the X11 display to be used.
@@ -153,7 +153,7 @@ vncserver usage:
     [-rfbport <number>]      provides the TCP port to be used for the RFB protocol.
     [-rfbunixpath <value>]   specifies the path of the Unix domain socket to be used for the RFB protocol.
     [-cleanstale]            if provided, clean up pid and lockfiles of stale VNC server instances of the user.
-  
+
   To kill a VNC server use vncserver
      -kill                   if provided, kill the specified VNC server of the user.
     [:<number>]              specifies the X11 display to be used.
@@ -163,10 +163,10 @@ vncserver usage:
     [-dry-run]               if enabled, no real action is taken only a simulation of what would be done is performed.
     [-verbose]               if specified, debugging output is enabled.
     [-clean]                 if specified, the log files of the terminated VNC session will also be removed.
-  
+
   To dump version information use vncserver
     [-version]               dumps version information of underlying Xtigervnc VNC server.
-  
+
 ```
 
 接下来, 输入
@@ -192,7 +192,7 @@ Use xtigervncviewer -SecurityTypes VncAuth,TLSVnc -passwd /tmp/tigervnc.TJqJuC/p
 
 macos的 vnc viewer 软件界面
 
------
+---
 
 ![与服务器的 vnc server 连接成功](/img/posts/23-christmas-lab/vnc-2.jpg)
 
@@ -208,7 +208,7 @@ macos的 vnc viewer 软件界面
 ### 安装nodejs以及pnpm
 
 ```bash
-curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash - 
+curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install nodejs -y
 curl -fsSL https://get.pnpm.io/install.sh | sh -
 source /root/.zshrc # source /root/.bashrc
@@ -232,7 +232,7 @@ apt install python3-numpy
 假设你的 vncserver 运行在 5901 上面.
 
 ```bash
-➜  noVNC git:(master) ✗ ./utils/novnc_proxy --vnc localhost:5901 --listen 0.0.0.0:8080  
+➜  noVNC git:(master) ✗ ./utils/novnc_proxy --vnc localhost:5901 --listen 0.0.0.0:8080
 Warning: could not find self.pem
 Starting webserver and WebSockets proxy on host 0.0.0.0 port 8080
 WebSocket server settings:

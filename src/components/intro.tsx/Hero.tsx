@@ -26,7 +26,7 @@ const Hero = () => (
         <img
           className="h-64 w-64"
           src="/assets/images/avatar.jpg"
-          alt="Shinnku&apos;s Avatar image"
+          alt="Shinnku's Avatar image"
           loading="lazy"
         />
       </div>
