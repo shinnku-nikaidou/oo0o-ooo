@@ -142,3 +142,12 @@ The signal line is then built as the exponential moving average of the MACD line
 
 $$\text{Signal line} =\mathrm{EMA}_9(\text{MACD line})$$
 
+```python
+macd_val  = ta.ema(close, 12) - ta.ema(close, 26)
+signal    = ta.ema(macd_val, 9)
+hist      = macd_val - signal
+
+plot(macd_val,  color=color.blue,  title="MACD")
+plot(signal,    color=color.orange,title="Signal")
+plot(hist,      style=plot.style_histogram, title="Histogram")
+```
