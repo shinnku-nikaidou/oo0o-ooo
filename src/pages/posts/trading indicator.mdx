@@ -119,3 +119,26 @@ $$
 $$
 
 whose impulse response is $e^{-t / \tau}$. That's why the EMA curve has the same exponential relaxation shape when it pulls away from price spikes.
+
+### Moving Average Convergence Divergence (MACD)
+
+The MACD is a momentum oscillator that shows the relationship between two EMAs of a security's price.
+
+By tracking how a short‑term EMA “converges toward” or “diverges from” a longer‑term EMA, it highlights changes in trend strength, direction, and momentum.
+Gerald Appel introduced it in the late 1970s, and the classic “12‑26‑9” parameters (explained below) remain the default today. 
+
+| Event                                 | Typical reading                                                               | Notes                                                                                      |
+| ------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| **Signal‑line crossover**             | DIF crosses **above** DEA → potential buy; crosses **below** → potential sell | Akin to a two‑MA crossover system but applied to DIF vs. its own average. ([Wikipedia][1]) |
+| **Zero‑line crossover**               | DIF moves from − to + → trend turns bullish; + to − → bearish                 | Confirms shifts in medium‑term trend direction.                                            |
+| **Histogram expansion / contraction** | Growing bars = increasing momentum; shrinking bars = waning momentum          | Gives an early visual cue before line crossovers.                                          |
+| **Price / MACD divergence**           | Price makes higher highs while DIF makes lower highs (or vice‑versa)          | Can foreshadow trend reversals, but often produces early signals.                          |
+
+https://en.wikipedia.org/wiki/MACD
+
+$$\text{MACD line} =\mathrm{EMA}_{12}-\mathrm{EMA}_{26}$$
+
+The signal line is then built as the exponential moving average of the MACD line:
+
+$$\text{Signal line} =\mathrm{EMA}_9(\text{MACD line})$$
+
