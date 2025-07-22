@@ -79,3 +79,43 @@ pine_ema(src, length) =>
     sum := na(sum[1]) ? src : alpha * src + (1 - alpha) * nz(sum[1])
 plot(pine_ema(close,15))
 ```
+
+| Form                     | Meaning                                                   | Typical use                                                                    |
+| ------------------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| **`na`** (bare constant) | “Not‑available” — the Pine equivalent of `NaN`/`null`.    | Initialize a series when you _deliberately_ want the first bar(s) to be empty. |
+| **`na(x)`** (function)   | Returns **`true`** if `x` is `na`, otherwise **`false`**. | Testing whether a previous‑bar value exists before you do math with it.        |
+
+`nz()` means “not‑na, or zero”.
+
+A simple moving average (SMA) assigns uniform weight inside its window and zero outside,
+so its lag to sudden jumps is fixed at roughly $N/2$ bars.
+Because EMA weights decay, its effective window shortens automatically when volatility rises:
+large moves add more weight to the newest bar and less to the stale tail,
+pulling the EMA closer to price. That “elastic” lag gives the EMA its characteristic tighter hug to
+the price compared with an SMA of equal period.
+
+Why the EMA curve "looks like that"
+
+**Exponential-decay weighting**
+
+The exponential moving average (EMA) of a series $x_t$ with period $N$ can be written non-recursively as
+
+$$
+\mathrm{EMA}_t=\sum_{k=0}^{\infty} w_k x_{t-k}, \quad w_k=(1-\alpha)^k \alpha, \quad \alpha=\frac{2}{N+1} .
+$$
+
+The weights $w_k$ form a geometric (exponential) sequence that never quite reaches $0$, 
+so every past sample contributes, but each step back in time is worth a constant proportion ( $1-\alpha$ ) less than the one before.
+
+Visual effect: the curve bends smoothly toward new prices, but the bend gets shallower the farther the new price is from the old EMA, 
+because the distant tail of small weights damps the response. 
+
+**First-order low-pass filter**
+
+is the discrete-time equivalent of the differential equation of a simple RC [low-pass filter](https://en.wikipedia.org/wiki/Low-pass_filter):
+
+$$
+\tau \frac{d y(t)}{d t}+y(t)=x(t)
+$$
+
+whose impulse response is $e^{-t / \tau}$. That's why the EMA curve has the same exponential relaxation shape when it pulls away from price spikes.
