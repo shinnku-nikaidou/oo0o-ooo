@@ -7,6 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "format": "prettier --write \"**/*.{js,ts,tsx,astro,json,md}\"",
     "type-check": "tsc --noEmit",
     "type-check-strict": "tsc --noEmit --skipLibCheck false",
     "lint": "eslint \"**/*.{js,ts,tsx,astro}\""

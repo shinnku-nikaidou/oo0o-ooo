@@ -1,0 +1,64 @@
+---
+layout: "@/partials/BasePost.astro"
+title: Trading Indicator
+pubDate: 2025-07-22T20:00:00Z
+#imgSrc: "/img/posts/"
+#imgAlt: "indicator trading"
+---
+
+# Trading Indicator
+
+I will write about trading indicators in this post.
+
+Both using technical analysis and fundamental analysis can help traders make informed decisions.
+
+I will cover various types of indicators, with elaborate and fundamental math definitions.
+
+## Data types
+
+| Granularity                      | Typical Schema   | Common Industry Term            | Key Contents                                                                       | Typical Uses                                          |
+| -------------------------------- | ---------------- | ------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **MBO** (Market‑By‑Order, L3)    | `Schema::Mbo`    | Full order‑book depth / Level 3 | Add, cancel, and execution events for every individual order, including `order_id` | Market making, trade‑match replay, liquidity research |
+| **MBP‑10** (Market‑By‑Price, L2) | `Schema::Mbp10`  | 10‑level price depth            | Aggregated order size and updates at each of the top 10 price levels               | Order‑book dynamics, arbitrage modeling               |
+| **MBP‑1 / TBBO** (Top Book, L1)  | `Schema::Mbp1`   | Best bid/ask                    | Best bid and ask quotes plus accompanying trades                                   | Basic quote display, NBBO comparison                  |
+| **Trades**                       | `Schema::Trades` | Tick‑by‑tick trades / last sale | Every executed trade (price, size, aggressor side, etc.)                           | Price‑volume analysis, VWAP, trade‑driven strategies  |
+| **OHLCV‑T**                      | `Schema::Ohlcv`  | Bars / K‑line                   | Aggregated O‑H‑L‑C‑V data per second, minute, hour, or day                         | Backtesting, charting, low‑frequency signals          |
+
+We now only use OHLCV‑T data, the other data types are used for high-frequency trading and are not available in our current setup.
+
+## Moving Averages (MA)
+
+### Simple Moving Average (SMA)
+
+For a price (or data) series $P_t$ and window length $N$:
+
+$$
+\text{SMA}_N(t)=\frac{1}{N}\sum_{i=0}^{N-1} P_{t-i}
+$$
+
+- $t$ — index of the current bar (latest observation)
+- $P_{t-i}$ — value $i$ bars ago
+- $N$ — number of observations in the averaging window
+
+```python
+indicator("ta.sma")
+
+pine_sma(x, N) =>
+    sum = 0.0
+    for i = 0 to N - 1
+        sum := sum + x[i] / N
+    sum
+plot(pine_sma(close, 15))
+```
+
+### Exponentially Weighted Moving Average (EMA)
+
+```python
+indicator("ta.ema")
+
+pine_ema(src, length) =>
+    alpha = 2 / (length + 1)
+    sum = 0.0
+    sum := na(sum[1]) ? src : alpha * src + (1 - alpha) * nz(sum[1])
+plot(pine_ema(close,15))
+```
