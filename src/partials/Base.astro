@@ -30,7 +30,7 @@ const {
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css"
-      crossorigin="anonymous"
+      crossOrigin="anonymous"
     />
   </head>
   <body>
@@ -41,7 +41,7 @@ const {
 
     <Footer />
 
-    <button id="backToTop" class="back-to-top">↑ Top</button>
+    <button id="backToTop" className="back-to-top">↑ Top</button>
   </body>
 </html>
 
@@ -66,14 +66,11 @@ const {
 </style>
 
 <script>
-  const backToTopButton = document.getElementById("backToTop")!;
+  const backToTopButton = document.getElementById("backToTop");
 
   // 当用户滚动页面时
   window.onscroll = function () {
-    if (
-      document.body.scrollTop > 20 ||
-      document.documentElement.scrollTop > 20
-    ) {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
       backToTopButton.style.display = "block";
     } else {
       backToTopButton.style.display = "none";
@@ -90,7 +87,7 @@ const {
   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
   // 定义更新主题状态的函数
-  const updateTheme = (e: { matches: boolean | undefined }) => {
+  const updateTheme = (e) => {
     document.documentElement.classList.toggle("dark", e.matches);
   };
 

@@ -6,7 +6,7 @@ const Hero = () => (
     <div className="flex flex-col items-center md:flex-row md:justify-between md:gap-x-24">
       <div>
         <h1 className="text-3xl font-bold">
-          Hi there, I'm <GradientText>shinnku</GradientText> 👋
+          Hi there, I&apos;m <GradientText>shinnku</GradientText> 👋
         </h1>
 
         <p className="mt-6 text-xl leading-9">
@@ -26,7 +26,7 @@ const Hero = () => (
         <img
           className="h-64 w-64"
           src="/assets/images/avatar.jpg"
-          alt="Shinnku's Avatar image"
+          alt="Shinnku&apos;s Avatar image"
           loading="lazy"
         />
       </div>

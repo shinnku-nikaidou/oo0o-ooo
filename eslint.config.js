@@ -13,11 +13,16 @@ export default [
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:astro/recommended"
+    "plugin:astro/recommended",
   ),
   {
     plugins: { prettier },
-    rules: { "prettier/prettier": "error" }
+    rules: {
+      "prettier/prettier": "error",
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off",
+    },
+    settings: { react: { version: "detect" } },
   },
   {
     files: ["**/*.astro"],
@@ -27,6 +32,10 @@ export default [
         parser: tsParser,
         extraFileExtensions: [".astro"],
       },
+    },
+    rules: {
+      "react/no-unknown-property": "off",
+      "prettier/prettier": "off",
     },
   },
   {
