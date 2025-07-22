@@ -26,7 +26,7 @@ export default function CounterMain({ children }: { children: JSX.Element }) {
   const { count, setCount } = useCounterState();
   useEffect(() => {
     setInitCount(count);
-  });
+  }, [count]);
 
   const add = () => setCount(count + 1);
   const subtract = () => {
