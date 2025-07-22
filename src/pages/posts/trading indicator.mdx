@@ -53,6 +53,23 @@ plot(pine_sma(close, 15))
 
 ### Exponentially Weighted Moving Average (EMA)
 
+For a price series $P_t$ and look‑back length $N$ (often called the “period”):
+
+$$
+\operatorname{EMA}_N(t)=\alpha P_t + (1-\alpha)\,\operatorname{EMA}_N(t-1),
+\qquad
+\alpha=\frac{2}{N+1}.
+$$
+
+- **Recursive form** (above) is how trading platforms update the line each new bar.
+- **Expanded form**—equivalent but shows the weights explicitly:
+
+$$
+\operatorname{EMA}_N(t)=\alpha\sum_{i=0}^{\infty}(1-\alpha)^{i}P_{t-i}.
+$$
+
+Because $0 < 1-\alpha < 1$, each older price is multiplied by a progressively smaller factor, so recent data dominate while the whole history still (theoretically) contributes.
+
 ```python
 indicator("ta.ema")
 
