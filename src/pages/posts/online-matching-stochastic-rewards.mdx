@@ -3,10 +3,41 @@ layout: "@/partials/BasePost.astro"
 title: "Online Matching with Stochastic Rewards"
 description: "Online Matching with Stochastic Rewards"
 pubDate: 2025-10-23T00:00:00Z
-author: ""
-cover: "/img/posts/bipartite.png"
-coverAlt: "A bipartite graph representation"
-tags: []
+imgSrc: "/img/posts/bipartite.png"
+imgAlt: "A bipartite graph representation"
 ---
 
-# Online Matching with Stochastic Rewards
+## Setting & model
+
+### Online Bipartite Matching
+
+The author Karp, Vazirani, and Vazirani introduce a bipartite graph model $G =(U \cup V, E)$, 
+where $U$ is given offline and $V$ arrives online [KVV90].
+The online algorithm must irrevocably match each arriving vertex $v \in V$ to an unmatched neighbor in $U$ or leave it unmatched.
+
+The offline optimal is defined as the maximum matching in $G$.
+The competitive ratio is defined as the expected size of the matching produced by the online algorithm divided by the size of the offline optimal matching.
+
+$$
+Ratio = ALG / OPT
+$$
+
+### Online Stochastic Matching Problem
+
+In the online matching problem with stochastic rewards, every edge $(u, v)$ also has an associated probability of success $p_{uv}$. 
+
+When a new vertex $v \in V$ arrives online, the algorithm either chooses not to assign it at all, or assigns it to one of its neighbors (these are the available options). 
+
+If $v$ is assigned to $u \in U$ using the edge $(u, v)$, a Bernoulli experiment is performed and the edge $(u, v)$ becomes a successful assignment with probability $p_{uv}$.
+
+In successful assignment case, we say that $u$ was successful and remove it from the set of *available* vertices. 
+On the other hand, if the assignment $(u, v)$ is not successful, $u$ remains available and a neighbor of $u$ that arrives later in the online order can be assigned to $u$ (but $v$ cannot be assigned in the future). 
+
+The overall objective is to maximize the *expected* number of successful vertices $u \in U$, or equivalently, the expected number of successful assignments.
+
+## Offline Optimal Benchmark
+
+
+
+
+
