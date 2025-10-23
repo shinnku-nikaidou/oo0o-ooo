@@ -58,26 +58,25 @@ The four probability regimes below (Vanishing/Arbitrary × Equal/Unequal) remain
 
 ## Offline Optimal Benchmark
 
-## Definition of Competitive Ratio
+### The Budgeted Allocation Problem
 
-For the **unweighted** case, the competitive ratio is $\mathbb{E}[ALG]/OPT$.
+Let $G = (U \cup V, E)$ be a bipartite graph where edge $(u, v)$ has weight
+$p_{uv}$.
+For every vertex $v \in V$, we assign it to one its neighbors $u \in U$ using
+edge $(u, v)$.
+The _load_ $L_u$ on a vertex $u \in U$ is defined as the sum of weights of
+assigned edges incident on $u$.
+The objective is to maximize $\sum_{u \in U} \min(L_u, 1)$.
 
-For the **vertex-weighted** case, the competitive ratio is $\mathbb{E}[ALG_w]/OPT_w$.
+For technical reasons, we allow fractional solutions, i.e. vertex $v \in V$
+can be assigned to its neighbors $u \in U$ with fractions $x_{uv}$ subject to
+$\sum_{u \in U} x_{uv} \le 1$; then $L_u = \sum_{u \in U} x_{uv} p_{uv}$.
 
-A convenient upper bound/benchmark is the (configuration) LP relaxation; a simple edge-based LP that suffices for exposition is:
-
-$$
-\begin{aligned}
-\max \quad & \sum_{u \in U} w_u\cdot p_{uv} \cdot x_{uv} \\
-\text{s.t.}\quad
-& \sum_{v \in N(u)} p_{uv}\, x_{uv} \;\le\; 1 \qquad && \forall u \in U \\
-& \sum_{u \in N(v)} x_{uv} \;\le\; 1 \qquad && \forall v \in V \\
-& 0 \le x_{uv}
-\end{aligned}
-$$
-
-Here $x_{uv}$ is the (fractional) probability of attempting $(u,v)$, and $y_u$ upper-bounds the success probability of $u$.
-Setting all $w_u\equiv 1$ recovers the unweighted benchmark.
+For any instance of the **Online Stochastic Matching** problem, we define
+$OPT$ to be the optimum fractional solution for the corresponding **Budgeted
+Allocation** problem.
+The next lemma claims that the value of $OPT$ is at least the expected number
+of successes obtained by _any_ **Online Stochastic Matching** algorithm.
 
 ## Distribution of the Success Threshold (Ө)
 
@@ -99,17 +98,111 @@ $$
 \operatorname{Pr}[\Theta=t p]=p(1-p)^{t-1} \quad(t=1,2, \ldots)
 $$
 
-so $\Theta$ only takes values in $\{p, 2 p, 3 p, \ldots\}$. A vertex $u$ becomes successful the first time its accumulated load $\ell_u$ reaches or exceeds $\Theta$. This is exactly the "equivalent threshold view" used by Mehta-Panigrahi.
+so $\Theta$ only takes values in $\{p, 2 p, 3 p, \ldots\}$.
+A vertex $u$ becomes successful the first time its accumulated load $\ell_u$
+reaches or exceeds $\Theta$.
+This is exactly the "equivalent threshold view" used by Mehta-Panigrahi.
 
-Basic moments. $\mathbb{E}[\Theta]=1$ and $\operatorname{Var}(\Theta)=1-p$. Thus, as $p \rightarrow 0$, both the mean and the variance tend to 1.
+Basic moments. $\mathbb{E}[\Theta]=1$ and $\operatorname{Var}(\Theta)=1-p$.
+Thus, as $p \rightarrow 0$, both the mean and the variance tend to 1.
 
-Vanishing limit $(p \rightarrow 0)$. Viewing the discrete distribution as a continuous-load approximation,
+Vanishing limit $(p \rightarrow 0)$.
+Viewing the discrete distribution as a continuous-load approximation,
 
 $$
 \operatorname{Pr}[\Theta>x]=(1-p)^{\lfloor x / p\rfloor} \underset{p \rightarrow 0}{\longrightarrow} e^{-x}
 $$
 
-i.e., $\Theta \Rightarrow \operatorname{Exp}(1)$. Consequently, in small- $p$ analyses it is standard to model each offline vertex's threshold as an independent $\operatorname{Exp}(1)$ random variable.
+i.e., $\Theta \Rightarrow \operatorname{Exp}(1)$.
+Consequently, in small-$p$ analyses it is standard to model each offline
+vertex's threshold as an independent $\operatorname{Exp}(1)$ random variable.
 
-Unequal but small probabilities. If the edge success probabilities $p_{u v}$ differ but are all small, we still measure load as the sum of allocated success probabilities.
-In this continuous-load coordinate, the threshold is well-approximated by $\operatorname{Exp}(1)$; each attempt just increments the load by the corresponding $p_{u v}$ instead of a fixed $p$.
+Unequal but small probabilities.
+If the edge success probabilities $p_{u v}$ differ but are all small, we still
+measure load as the sum of allocated success probabilities.
+In this continuous-load coordinate, the threshold is well-approximated by
+$\operatorname{Exp}(1)$; each attempt just increments the load by the
+corresponding $p_{u v}$ instead of a fixed $p$.
+
+## Definition of Competitive Ratio
+
+For the **unweighted** case, the competitive ratio is $\mathbb{E}[ALG]/OPT$.
+
+For the **vertex-weighted** case, the competitive ratio is $\mathbb{E}[ALG_w]/OPT_w$.
+
+A convenient upper bound/benchmark is the (configuration) LP relaxation; a simple edge-based LP that suffices for exposition is:
+
+$$
+\begin{aligned}
+\max \quad & \sum_{u \in U} w_u\cdot p_{uv} \cdot x_{uv} \\
+\text{s.t.}\quad
+& \sum_{v \in N(u)} p_{uv}\, x_{uv} \;\le\; 1 \qquad && \forall u \in U && (1) \\
+& \sum_{u \in N(v)} x_{uv} \;\le\; 1 \qquad && \forall v \in V && (2) \\
+& 0 \le x_{uv}
+\end{aligned}
+$$
+
+Here $x_{uv}$ is the (fractional) probability of attempting $(u,v)$, all
+$w_u\equiv 1$ recovers the unweighted benchmark.
+
+Eqn. (1) states that the expected load of each offline vertex $u$ is upper
+bounded by 1, because it is upper bounded by the expectation of the threshold
+$\theta_u$, which equals 1.
+
+Eqn. (2) is a standard capacity constraint: each online vertex $v$ can be
+matched to at most one offline neighbor.
+
+Following the vertex-weighted model of Mehta and Panigrahi [24], we will
+consider the optimal objective of the above LP relaxation as the benchmark.
+
+**Configuration LP**
+
+Let $N_u$ denote the set of neighbors of an offline vertex $u$.
+Further, for any $S \subseteq N_u$, let $p_u(S)= \min \left\{\sum_{v \in S} p_{u v}, 1\right\}$.
+Consider the following offline-side configuration LP:
+
+$$
+\begin{aligned}
+\text{ConfigLP:} \quad \max \quad & \sum_{u \in U} \sum_{S \subseteq N_u} w_u \cdot p_u(S) \cdot x_{u S} \\
+\text{s.t.} \quad & \sum_{S \subseteq N_u} x_{u S} \leq 1 && \forall u \in U \\
+& \sum_{u \in U} \sum_{S \subseteq N_u: v \in S} x_{u S} \leq 1 && \forall v \in V \\
+& x_{u S} \geq 0 && \forall u \in U, \forall S \subseteq N_u
+\end{aligned}
+$$
+
+From an offline optimization viewpoint, as $p$, the upper bound of success
+probabilities, tends to zero, the configuration LP is equivalent to the
+standard matching LP in the following sense.
+First, the matching LP can be reinterpreted as to maximize
+$\sum_{u \in U} w_u \cdot \min \left\{\sum_{v:(u, v) \in E} p_{u v} x_{u v}, 1\right\}$
+subject to only Eqn. (2) and (3).
+
+On one hand, any feasible assignment of the configuration LP corresponds to a
+feasible assignment of the matching LP with
+$x_{u v}=\sum_{S \in N_u: v \in S} x_{u S}$.
+Comparing the objectives of the LPs, the matching LP objective is weakly
+larger because $\min \{z, 1\}$ is concave.
+
+On the other hand, given any feasible assignment of the matching LP, we can
+sample an integral matching via independent rounding, i.e., match each online
+vertex $v$ to a neighbor that is independently sampled according to
+$x_{u v}$ 's.
+
+Then, it gives an integral assignment of the configuration LP: $x_{u S}=1$ for
+the subset $S$ of neighbors matched to $u$ in the independent rounding, and 0
+otherwise.
+Further, by standard concentration inequalities (and union bound), the load of
+each vertex $u$ is at most its expected load, which is at most 1 due to
+Eqn. (1), plus an additive error that diminishes as $p$ tends to zero.
+Hence, the optimal of the configuration LP is at least that of the matching LP
+less a term that diminishes as $p$ tends to zero.
+
+The corresponding dual LP of the configuration LP is the following:
+
+$$
+\begin{aligned}
+\text{Dual:} \quad \min \quad & \sum_{u \in U} \alpha_u+\sum_{v \in V} \beta_v \\
+\text{s.t.} \quad & \alpha_u+\sum_{v \in S} \beta_v \geq w_u \cdot p_u(S) && \forall u \in U, \forall S \subseteq N_u \\
+& \alpha_u, \beta_v \geq 0 && \forall u \in U, \forall v \in V
+\end{aligned}
+$$
