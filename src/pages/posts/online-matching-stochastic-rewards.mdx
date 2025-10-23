@@ -11,7 +11,7 @@ imgAlt: "A bipartite graph representation"
 
 ### Online Bipartite Matching
 
-The author Karp, Vazirani, and Vazirani introduce a bipartite graph model $G =(U \cup V, E)$, 
+The author Karp, Vazirani, and Vazirani introduce a bipartite graph model $G =(U \cup V, E)$,
 where $U$ is given offline and $V$ arrives online [KVV90].
 The online algorithm must irrevocably match each arriving vertex $v \in V$ to an unmatched neighbor in $U$ or leave it unmatched.
 
@@ -24,20 +24,92 @@ $$
 
 ### Online Stochastic Matching Problem
 
-In the online matching problem with stochastic rewards, every edge $(u, v)$ also has an associated probability of success $p_{uv}$. 
+In the online matching problem with stochastic rewards, every edge $(u, v)$ also has an associated probability of success $p_{uv}$.
 
-When a new vertex $v \in V$ arrives online, the algorithm either chooses not to assign it at all, or assigns it to one of its neighbors (these are the available options). 
+When a new vertex $v \in V$ arrives online, the algorithm either chooses not to assign it at all, or assigns it to one of its neighbors (these are the available options).
 
 If $v$ is assigned to $u \in U$ using the edge $(u, v)$, a Bernoulli experiment is performed and the edge $(u, v)$ becomes a successful assignment with probability $p_{uv}$.
 
-In successful assignment case, we say that $u$ was successful and remove it from the set of *available* vertices. 
-On the other hand, if the assignment $(u, v)$ is not successful, $u$ remains available and a neighbor of $u$ that arrives later in the online order can be assigned to $u$ (but $v$ cannot be assigned in the future). 
+In successful assignment case, we say that $u$ was successful and remove it from the set of _available_ vertices.
+On the other hand, if the assignment $(u, v)$ is not successful, $u$ remains available and a neighbor of $u$ that arrives later in the online order can be assigned to $u$ (but $v$ cannot be assigned in the future).
 
-The overall objective is to maximize the *expected* number of successful vertices $u \in U$, or equivalently, the expected number of successful assignments.
+The overall objective is to maximize the _expected_ number of successful vertices $u \in U$, or equivalently, the expected number of successful assignments.
+
+### Vertex-Weighted Stochastic Matching
+
+In the vertex-weighted variant, each offline vertex $u \in U$ has a nonnegative weight $w_u$.
+A successful assignment on $u$ yields reward $w_u$ and removes $u$ from availability (as before).
+The objective becomes maximizing the **expected total weight** of successful offline vertices:
+
+$$
+\max \; \mathbb{E}\!\left[\sum_{u \in U} w_u \cdot \mathbf{1}\{u\ \text{is matched successfully}\}\right].
+$$
+
+The unweighted model is the special case $w_u \equiv 1$.
+
+The four probability regimes below (Vanishing/Arbitrary × Equal/Unequal) remain the same; results in recent work typically extend to the vertex-weighted case with essentially the same analyses.
+
+### Probability Settings
+
+1. Vanishing & Equal Probabilities
+2. Vanishing & Unequal Probabilities
+3. Arbitrary/Non-Vanishing & Equal Probabilities
+4. Arbitrary/Non-Vanishing & Unequal
 
 ## Offline Optimal Benchmark
 
+## Definition of Competitive Ratio
 
+For the **unweighted** case, the competitive ratio is $\mathbb{E}[ALG]/OPT$.
 
+For the **vertex-weighted** case, the competitive ratio is $\mathbb{E}[ALG_w]/OPT_w$.
 
+A convenient upper bound/benchmark is the (configuration) LP relaxation; a simple edge-based LP that suffices for exposition is:
 
+$$
+\begin{aligned}
+\max \quad & \sum_{u \in U} w_u\cdot p_{uv} \cdot x_{uv} \\
+\text{s.t.}\quad
+& \sum_{v \in N(u)} p_{uv}\, x_{uv} \;\le\; 1 \qquad && \forall u \in U \\
+& \sum_{u \in N(v)} x_{uv} \;\le\; 1 \qquad && \forall v \in V \\
+& 0 \le x_{uv}
+\end{aligned}
+$$
+
+Here $x_{uv}$ is the (fractional) probability of attempting $(u,v)$, and $y_u$ upper-bounds the success probability of $u$.
+Setting all $w_u\equiv 1$ recovers the unweighted benchmark.
+
+## Distribution of the Success Threshold (Ө)
+
+Let $\tau$ be the round of the first success when repeatedly attempting the same offline vertex $u$. Then
+
+$$
+\tau \sim \operatorname{Geom}(p) \quad(\tau=1,2,3, \ldots) .
+$$
+
+Measure "load" as the cumulative success probability: each attempt adds $p$. Define
+
+$$
+\Theta:=p \cdot \tau .
+$$
+
+Hence,
+
+$$
+\operatorname{Pr}[\Theta=t p]=p(1-p)^{t-1} \quad(t=1,2, \ldots)
+$$
+
+so $\Theta$ only takes values in $\{p, 2 p, 3 p, \ldots\}$. A vertex $u$ becomes successful the first time its accumulated load $\ell_u$ reaches or exceeds $\Theta$. This is exactly the "equivalent threshold view" used by Mehta-Panigrahi.
+
+Basic moments. $\mathbb{E}[\Theta]=1$ and $\operatorname{Var}(\Theta)=1-p$. Thus, as $p \rightarrow 0$, both the mean and the variance tend to 1.
+
+Vanishing limit $(p \rightarrow 0)$. Viewing the discrete distribution as a continuous-load approximation,
+
+$$
+\operatorname{Pr}[\Theta>x]=(1-p)^{\lfloor x / p\rfloor} \underset{p \rightarrow 0}{\longrightarrow} e^{-x}
+$$
+
+i.e., $\Theta \Rightarrow \operatorname{Exp}(1)$. Consequently, in small- $p$ analyses it is standard to model each offline vertex's threshold as an independent $\operatorname{Exp}(1)$ random variable.
+
+Unequal but small probabilities. If the edge success probabilities $p_{u v}$ differ but are all small, we still measure load as the sum of allocated success probabilities.
+In this continuous-load coordinate, the threshold is well-approximated by $\operatorname{Exp}(1)$; each attempt just increments the load by the corresponding $p_{u v}$ instead of a fixed $p$.
