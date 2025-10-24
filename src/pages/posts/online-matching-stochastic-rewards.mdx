@@ -126,6 +126,8 @@ corresponding $p_{u v}$ instead of a fixed $p$.
 
 ## Definition of Competitive Ratio
 
+Let $N_u$ denote the set of neighbors of an offline vertex $u$.
+
 For the **unweighted** case, the competitive ratio is $\mathbb{E}[ALG]/OPT$.
 
 For the **vertex-weighted** case, the competitive ratio is $\mathbb{E}[ALG_w]/OPT_w$.
@@ -147,7 +149,7 @@ $w_u\equiv 1$ recovers the unweighted benchmark.
 
 Eqn. (1) states that the expected load of each offline vertex $u$ is upper
 bounded by 1, because it is upper bounded by the expectation of the threshold
-$\theta_u$, which equals 1.
+$\theta_u$, which equals 1. (this uses the Law of Total Probability)
 
 Eqn. (2) is a standard capacity constraint: each online vertex $v$ can be
 matched to at most one offline neighbor.
@@ -157,8 +159,7 @@ consider the optimal objective of the above LP relaxation as the benchmark.
 
 **Configuration LP**
 
-Let $N_u$ denote the set of neighbors of an offline vertex $u$.
-Further, for any $S \subseteq N_u$, let $p_u(S)= \min \left\{\sum_{v \in S} p_{u v}, 1\right\}$.
+For any $S \subseteq N_u$, let $p_u(S)= \min \left\{\sum_{v \in S} p_{u v}, 1\right\}$.
 Consider the following offline-side configuration LP:
 
 $$
@@ -174,12 +175,20 @@ From an offline optimization viewpoint, as $p$, the upper bound of success
 probabilities, tends to zero, the configuration LP is equivalent to the
 standard matching LP in the following sense.
 First, the matching LP can be reinterpreted as to maximize
-$\sum_{u \in U} w_u \cdot \min \left\{\sum_{v:(u, v) \in E} p_{u v} x_{u v}, 1\right\}$
+
+$$
+\sum_{u \in U} w_u \cdot \min \left\{\sum_{v:(u, v) \in E} p_{u v} x_{u v}, 1\right\}
+$$
+
 subject to only Eqn. (2) and (3).
 
 On one hand, any feasible assignment of the configuration LP corresponds to a
 feasible assignment of the matching LP with
-$x_{u v}=\sum_{S \in N_u: v \in S} x_{u S}$.
+
+$$
+x_{u v}=\sum_{S \in N_u: v \in S} x_{u S}.
+$$
+
 Comparing the objectives of the LPs, the matching LP objective is weakly
 larger because $\min \{z, 1\}$ is concave.
 
@@ -206,3 +215,109 @@ $$
 & \alpha_u, \beta_v \geq 0 && \forall u \in U, \forall v \in V
 \end{aligned}
 $$
+
+An algorithm is $\Gamma$-competitive if:
+
+1. Equal primal and dual objectives:
+
+$$
+\sum_{u \in U} \sum_{S \subseteq N_u} p_u(S) \cdot w_u \cdot x_{u S}=\sum_{u \in U} \alpha_u+\sum_{v \in V} \beta_v ;
+$$
+
+Approximate dual feasibility: For any $u \in U$ and any $S \subseteq N_u$,
+
+$$
+\mathbf{E}\left[\alpha_u+\sum_{v \in S} \beta_v\right] \geq \Gamma \cdot w_u \cdot p_u(S)
+$$
+
+## Analyses
+
+Let $\ell_u$ denotes the load of an offline vertex $u \in U$, $\Theta$ be the vector of $\Theta_u$ for all $u \in U$, and let $\Theta_{-u}$ denote the entire vector $\Theta$ except $\Theta_u$.
+For any fixed ( $n-1$ )-dimensional vector $\theta$, let
+
+$$
+p_u(\theta):=\operatorname{Pr}\left[\Theta_{-u}=\theta\right]
+$$
+
+Further, let $\ell_u^{\infty}(\theta)$ be the load on vertex $u$ when $\Theta_{-u}=\theta$ and $\Theta_u=\infty$; correspondingly, let
+
+$$
+q_u(x):=\sum_{\substack{\theta: \ell_u^{\infty}(\theta)=x }} p_u(\theta)
+$$
+
+### Dual Assignment
+
+Note that $u$ 's load increases over time; let it be the current load in the following discussion.
+For some **non-decreasing function** $f: \mathbf{R}^{+} \mapsto \mathbf{R}^{+}$to be determined in the analysis, we maintain the dual assignment as follows.
+
+1. Initially, let $\alpha_u=0$ for all $u \in U$.
+2. On the arrival of an online vertex $v \in V$ and, thus, the corresponding dual variable $\beta_v$ :
+   (a) If $v$ is matched to $u \in U$, increase $\alpha_u$ by $p f\left(\ell_u\right)$ and let $\beta_v=p\left(1-f\left(\ell_u\right)\right)$.
+   (b) If $v$ has no unsuccessful neighbor, let $\beta_v=0$.
+
+Let $F(\ell)=\int_0^{\ell} f(z) d z$ denote the integral of $f$. Note that we have $\alpha_u=F\left(\ell_u\right)$ in the limit as $p$ tends to zero.
+
+**Contribution from $ \alpha_u $.**  
+We now proceed to prove approximate dual feasibility using the above characterization. First, consider the contribution from the offline vertex $u$.
+
+_For any thresholds $ \theta\_{-u} $ of offline vertices other than $u$ and the corresponding $ \ell_u^{\infty} $:_
+
+$$
+\mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
+\;\ge\;
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, f(\theta_u)\, d\theta_u \, .
+$$
+
+By the above characterization, $u$'s load equals $ \ell_u^{\infty} $ when $ \theta_u \ge \ell_u^{\infty} $, and equals $ \theta_u $ when $ 0 \le \theta_u < \ell_u^{\infty} $. Further, recall that $ \alpha_u = F(\ell_u) $ and that $ \theta_u \sim \operatorname{Exp}(1) $. We get that:
+
+$$
+\mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
+\;\ge\;
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u} F(\theta_u)\, d\theta_u
+\;+\;
+e^{-\ell_u^{\infty}} F(\ell_u^{\infty})
+\;=\;
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u} f(\theta_u)\, d\theta_u \, .
+$$
+
+Here, the equality follows by integration by parts. $\square$
+
+---
+
+**Contribution from $ \beta_v $’s.**  
+Next, consider the contribution from the online vertices $ v \in S $. For ease of notations, we let $ z^{+} $ denote $ \max\{z,0\} $.
+
+For any thresholds $ \theta\_{-u} $ of offline vertices other than $u$ and the corresponding $ \ell*u^{\infty} $:*
+
+$$
+\begin{aligned}
+\mathbb{E}_{\theta_u}\!\left[\sum_{v\in S} \beta_v \,\middle|\, \theta_{-u}\right]
+\;\ge\;
+&\left(
+e^{-\ell_u^{\infty}}\, p_u(S)
+\;+\;
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, d\theta_u
+\right) \\
+&\times \big(1 - f(\ell_u^{\infty})\big)\, .
+\end{aligned}
+$$
+
+_Proof._ By the above characterization, all vertices $ v \in S $ are matched to neighbors with load at most $ \ell_u^{\infty} $ at the time of the matches when $ \theta_u \ge \ell_u^{\infty} $. This happens with probability $ e^{-\ell_u^{\infty}} $ and contributes:
+
+$$
+e^{-\ell_u^{\infty}}\, p_u(S)\cdot \big(1 - f(\ell_u^{\infty})\big),
+$$
+
+to the expectation in the lemma.
+
+Similarly, all vertices $ v \in S $, except for $ p^{-1}(\ell_u^{\infty}-\theta_u) $ of them, are still matched to neighbors with load at most $ \ell_u^{\infty} $ at the time of the matches when $ 0 \le \theta_u < \ell_u^{\infty} $.
+
+> In the Stochastic Balance algorithm, each online vertex is matched to the unsuccessful neighbor with the least load, so only the overflow load $ \ell_u^{\infty}-\theta_u $ exceeds $ \theta_u $ and causes $ u $ to become successful.
+
+This contributes:
+
+$$
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, d\theta_u \cdot \big(1 - f(\ell_u^{\infty})\big),
+$$
+
+to the expectation. $\square$
