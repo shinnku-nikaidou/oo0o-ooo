@@ -321,3 +321,38 @@ $$
 $$
 
 to the expectation. $\square$
+
+So we have:
+
+$$
+\mathbf{E}\left[\alpha_u+\sum_{v \in S} \beta_v\right] \geq \int_0^{\ell_u^{\infty}} e^{-\theta_u} f\left(\theta_u\right) d \theta_u+\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)^{+} d \theta_u\right)\left(1-\mathscr{f}\left(\ell_u^{\infty}\right)\right)
+$$
+
+To show approximate dual feasibility, it suffices to find a non-decreasing function $f$ such that for any $\ell_u^{\infty} \geq 0$ and any $0 \leq p_u(S) \leq 1$ :
+
+$$
+\int_0^{\ell_u^{\infty}} e^{-\theta_u} f\left(\theta_u\right) d \theta_u+\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)^{+} d \theta_u\right)\left(1-f\left(\ell_u^{\infty}\right)\right) \geq \Gamma \cdot p_u(S)
+$$
+
+Therefore, there is at most one index $j$ such that $\ell_j<\ell_u^{\infty}$ and $\ell_{j+1} \geq \ell_u^{\infty}$.
+
+
+### Solving the Differential Inequality
+
+For ease of notations, we write $\ell_u^{\infty}$ as $\ell, p_u(S)$ as $p$, and $\theta_u$ as $\theta$. Then, =becomes:
+
+$$
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+\left(e^{-\ell} p+\int_0^{\ell} e^{-\theta}(p-(\ell-\theta))^{+} d \theta\right)(1-f(\ell)) \geq \Gamma \cdot p .
+$$
+
+First, note that the $z^{+}$operation effectively restricts the second integration in the above equation to be from max $\{0, \ell-p\}$ to $\ell$. This allows us to simplify the above equation by taking away the $z^{+}$operation. Concretely, it suffices to ensure that for any $0 \leq p<\ell$ :
+
+$$
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+p}-e^{-\ell}\right) \geq \Gamma \cdot p,
+$$
+
+and for any $0 \leq \ell \leq p$ :
+
+$$
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(1-\ell+p-e^{-\ell}\right) \geq \Gamma \cdot p .
+$$
