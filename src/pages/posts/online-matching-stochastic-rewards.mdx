@@ -421,7 +421,7 @@ triangular ("Z-shaped") bipartite graph with the $G(n,k)$ structure.
 - Processing rule:
   - Independently draw $N_j\sim\mathrm{Pois}(1)$.
   - At the moment online node $v_j$ is processed, let $S_j$ be the set of its currently available
-    neighbors and $R_j=|S_j|$.
+    neighbors and $R_j \overset{\text{def}}{=} |S_j|$ .
   - Pick $Y_j=\min(N_j,R_j)$ offline nodes **uniformly at random without replacement** in $S_j$
     and occupy them.
 
@@ -487,7 +487,7 @@ Let $U$ be a uniformly random offline node in $\{u_1,\dots,u_n\}$, sampled indep
 Define the **cumulative Phase-A hazard on offline node $U$** by
 
 $$
-H_U^{(A)} \;=\; \sum_{j=1}^{k} h_j\,\mathbf{1}\{\,U\in S_j\,\}.
+H_U^{(A)} \;\overset{\text{def}}{=}\; \sum_{j=1}^{k} h_j\,\mathbf{1}\{\,U\in S_j\,\}.
 $$
 
 Taking expectations and swapping sums (double counting):
@@ -646,23 +646,53 @@ $$
 }
 $$
 
-#### Why the $1-e^{-1}$ constant appears
-
-Within each online node $v_j$, the random seat selection spreads its "unit of effort" uniformly
-over a large available set $S_j$, so the per-offline-node hit probability is
-approximately $1/R_j$, and the **average** Phase-A hazard per offline node accumulates to $k/n$.
-Survival is the product of "not hit" across independent Poisson draws,
-giving $e^{-k/n}$ (or, more finely for offline node $u_i$, $e^{-\min\{i,k\}/n}$).
-This is the discrete analogue of the survival-analysis identity $S=\exp(-\text{hazard})$,
-plus a **mass-transport** (double counting) identity to compute the mean hazard.
-
 #### Notes on accuracy and concentration
 
 - **With vs. without replacement:** the difference in a single online node is $O(R_j^{-2})$,
   and across $k=O(n)$ online nodes the cumulative effect is $o(1)$ in normalized expectation.
-- **Concentration:** $H_U^{(A)}$ is a bounded-difference functional of the per-online-node randomness
-  with online-node-wise Lipschitz constants $O(1/R_j)$ and $\sum O(1/R_j)=O(1)$,
-  so Azuma–McDiarmid gives concentration at scale $O(n^{-1/2})$.
+
+- **Concentration:** Why can we replace $\mathbb{E}[e^{-H_U^{(A)}}]$ with $e^{-\mathbb{E}[H_U^{(A)}]}$?
+
+  The key is that $H_U^{(A)} = \sum_{j=1}^{k} h_j \mathbf{1}\{U \in S_j\}$ concentrates tightly around its mean.
+
+  **Bounded differences property.** When online node $v_j$ arrives:
+  - Suppose $R_j \geq n - j + 1$ (almost always true in Phase A)
+  - The discrete hazard $h_j \approx 1/R_j$ is the probability that $v_j$ hits any specific offline node in $S_j$
+  - Changing $v_j$'s random choice affects $H_U^{(A)}$ by at most $1/R_j$ (it can only "hit" $U$ with probability $\approx 1/R_j$)
+  - After summing across $N_j \leq L = O(\log n)$ attempts (since $N_j \sim \mathrm{Pois}(1)$ is typically small), we get Lipschitz constant:
+    $$
+    c_j \;\leq\; \frac{CL}{n-j+1} \;\leq\; \frac{CL}{n(1-\alpha)}, \quad \text{where } L = O(\log n)
+    $$
+
+  **Applying Azuma–McDiarmid.** Define $M_j = \mathbb{E}[H_U^{(A)} \mid v_1,\dots,v_j \text{ processed}]$ as a Doob martingale. The bounded differences give:
+
+  $$
+  \sum_{j=1}^k c_j^2
+  \;\leq\;
+  \frac{C^2L^2}{n^2} \sum_{j=1}^k \frac{1}{(1-\frac{j-1}{n})^2}
+  \;=\; O\left(\frac{(\log n)^2}{n}\right)
+  $$
+
+  By the Azuma–McDiarmid inequality (for martingales with bounded differences), for any $\varepsilon > 0$:
+
+  $$
+  \Pr\bigl(|H_U^{(A)} - \mathbb{E}[H_U^{(A)}]| > \varepsilon\bigr)
+  \;\leq\;
+  2\exp\left(-\frac{2\varepsilon^2}{\sum_{j=1}^k c_j^2}\right)
+  \;=\;
+  2\exp\left(-\Theta\left(\frac{\varepsilon^2 n}{(\log n)^2}\right)\right)
+  $$
+
+  Setting $\varepsilon = \Theta(n^{-A})$ for any $A > 0$ (say $A = 1/2$), the deviation probability is exponentially small. Therefore $H_U^{(A)} = \mathbb{E}[H_U^{(A)}] + \tilde{O}(1/\sqrt{n})$ with high probability, which justifies:
+
+  $$
+  \mathbb{E}[e^{-H_U^{(A)}}]
+  \;=\;
+  e^{-\mathbb{E}[H_U^{(A)}] + o(1)}
+  \;=\;
+  e^{-k/n + o(1)}
+  $$
+
 - **Refined Phase-A formula** using $\Pr(\text{survive at }u_i)\approx e^{-\min\{i,k\}/n}$
   yields
   $$
