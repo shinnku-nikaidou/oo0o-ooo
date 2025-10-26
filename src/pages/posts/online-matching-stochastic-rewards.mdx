@@ -405,34 +405,34 @@ To conclude, we find the $f(x)$ shown in Eqn.(5). Thus $\Gamma=1-f(0) \approx 0.
 
 ### Online Matching on the Z-shaped Bipartite Graph — Full Derivation (Random Seat Selection)
 
-This note gives a complete, self-contained derivation for the model you implemented in Rust:
-each row $j$ draws $N_j\sim\mathrm{Pois}(1)$ and then picks
-$\min(N_j,\#\text{availableNeighbors})$ **uniformly at random without replacement**
+This note gives a complete, self-contained derivation for the model:
+Each online node $v_j$ (where $j\in \{1,\dots,n\}$) draws $N_j\sim\mathrm{Pois}(1)$ and then picks
+$\min(N_j,\#\text{AvailableNeighbors})$ **uniformly at random without replacement**
 from its currently available neighbors. We analyze the expected total matches on the
 triangular ("Z-shaped") bipartite graph with the $G(n,k)$ structure.
 
 #### Model
 
-- Columns (offline nodes): $u=1,\dots,n$, each with capacity 1.
-- Rows (online nodes): $j=1,\dots,n$.
+- Offline nodes: $u_1, u_2, \dots, u_n$, each with capacity 1.
+- Online nodes: $v_1, v_2, \dots, v_n$, arriving in order.
 - Adjacency:
-  - If $j\le k$: row $j$ connects to the suffix $\{j,j+1,\dots,n\}$.
-  - If $j>k$: row $j$ connects only to $\{j\}$ (diagonal).
-- Processing rule (your code):
+  - If $j\le k$: online node $v_j$ connects to offline nodes $\{u_j, u_{j+1}, \dots, u_n\}$.
+  - If $j>k$: online node $v_j$ connects only to offline node $u_j$ (diagonal).
+- Processing rule:
   - Independently draw $N_j\sim\mathrm{Pois}(1)$.
-  - At the moment row $j$ is processed, let $S_j$ be the set of its currently available
+  - At the moment online node $v_j$ is processed, let $S_j$ be the set of its currently available
     neighbors and $R_j=|S_j|$.
-  - Pick $Y_j=\min(N_j,R_j)$ columns **uniformly at random without replacement** in $S_j$
+  - Pick $Y_j=\min(N_j,R_j)$ offline nodes **uniformly at random without replacement** in $S_j$
     and occupy them.
 
-Let $M_{n,k}$ be the total number of matched columns when all $n$ rows have been processed.
+Let $M_{n,k}$ be the total number of matched offline nodes when all $n$ online nodes have been processed.
 
 #### Phase Split
 
 We split the process into two phases:
 
-- **Phase A:** rows $j=1,\dots,k$ (suffix rows).
-- **Phase B:** rows $j=k+1,\dots,n$ (diagonal rows).
+- **Phase A:** online nodes $v_j$ for $j=1,\dots,k$ (suffix online nodes).
+- **Phase B:** online nodes $v_j$ for $j=k+1,\dots,n$ (diagonal online nodes).
 
 Total matches:
 
@@ -440,17 +440,17 @@ $$
 M_{n,k} \;=\; M^{(A)} + M^{(B)}.
 $$
 
-#### Phase A — Per-row "hit probability" (discrete hazard)
+#### Phase A — Per-online-node "hit probability" (discrete hazard)
 
-Fix a row $j\le k$. Conditional on the history (all randomness before row $j$ is processed),
+Fix an online node $v_j$ with $j\le k$. Conditional on the history (all randomness before online node $v_j$ is processed),
 the set $S_j$ of available neighbors has size $R_j$.
 By symmetry of **uniform without replacement** within $S_j$,
-each column $u\in S_j$ has the **same** conditional hit probability
+each offline node $u_i\in S_j$ has the **same** conditional hit probability
 
 $$
 h_j
 \;=\;
-\Pr(\text{row }j\text{ selects a given }u\in S_j \mid S_j)
+\Pr(\text{online node }v_j\text{ selects a given }u_i\in S_j \mid S_j)
 \;=\;
 \frac{\mathbb{E}[\,\min(N_j,R_j)\mid S_j]}{R_j}.
 $$
@@ -464,13 +464,13 @@ $$
 $$
 
 > For large $R_j$ the without/with-replacement difference is $O(R_j^{-2})$, which is negligible
-> in our large-$n$ limit (it contributes only $o(1)$ after summing across rows).
+> in our large-$n$ limit (it contributes only $o(1)$ after summing across online nodes).
 
-**Key single-row conservation:**
-the total hit probability row $j$ "sprays" across its available set is
+**Key single-online-node conservation:**
+the total hit probability online node $v_j$ "sprays" across its available set is
 
 $$
-\sum_{u\in S_j} h_j
+\sum_{u_i\in S_j} h_j
 \;=\;
 R_j\cdot h_j
 \;=\;
@@ -483,8 +483,8 @@ $$
 
 #### Phase A — Mass Transport (double counting / conservation of expectation)
 
-Let $U$ be a uniformly random column in $\{1,\dots,n\}$, sampled independently of the process.
-Define the **cumulative Phase-A hazard on column $U$** by
+Let $U$ be a uniformly random offline node in $\{u_1,\dots,u_n\}$, sampled independently of the process.
+Define the **cumulative Phase-A hazard on offline node $U$** by
 
 $$
 H_U^{(A)} \;=\; \sum_{j=1}^{k} h_j\,\mathbf{1}\{\,U\in S_j\,\}.
@@ -493,14 +493,14 @@ $$
 Taking expectations and swapping sums (double counting):
 
 $$
-\sum_{u=1}^n \mathbb{E}[H_u^{(A)}]
+\sum_{i=1}^n \mathbb{E}[H_{u_i}^{(A)}]
 \;=\;
-\sum_{j=1}^{k} \mathbb{E}\!\left[\sum_{u\in S_j} h_j\right]
+\sum_{j=1}^{k} \mathbb{E}\!\left[\sum_{u_i\in S_j} h_j\right]
 \;=\;
 \sum_{j=1}^{k} \mathbb{E}[\min(N_j,R_j)].
 $$
 
-Averaging over columns:
+Averaging over offline nodes:
 
 $$
 \boxed{
@@ -512,16 +512,16 @@ $$
 }
 $$
 
-Intuition: each of the first $k$ rows contributes about 1 unit of "risk" across columns,
-so per column the **average** Phase-A hazard is $k/n$ (up to $o(1)$).
+Intuition: each of the first $k$ online nodes contributes about 1 unit of "risk" across offline nodes,
+so per offline node the **average** Phase-A hazard is $k/n$ (up to $o(1)$).
 
-> **Non-uniformity note.** For a _fixed_ column $u$,
-> only rows $j\le \min\{u,k\}$ can hit it, so its mean Phase-A hazard is
-> $\mu_u\approx \min\{u,k\}/n$ (not uniform). We will use this refined view below.
+> **Non-uniformity note.** For a _fixed_ offline node $u_i$,
+> only online nodes $v_j$ with $j\le \min\{i,k\}$ can hit it, so its mean Phase-A hazard is
+> $\mu_i\approx \min\{i,k\}/n$ (not uniform). We will use this refined view below.
 
 #### Phase A — Survival probability and expected matches
 
-Conditional on the process, the probability that column $U$ survives Phase A (remains empty) is
+Conditional on the process, the probability that offline node $U$ survives Phase A (remains empty) is
 
 $$
 \prod_{j=1}^{k}\bigl(1-h_j\,\mathbf{1}\{U\in S_j\}\bigr).
@@ -553,27 +553,27 @@ $$
 }
 $$
 
-> **Refined (non-uniform) Phase-A sum.** If you want the column-by-column form,
+> **Refined (non-uniform) Phase-A sum.** If you want the offline-node-by-offline-node form,
 
 $$
 \mathbb{E}[M^{(A)}]
 \;\approx\;
-\sum_{u=1}^{k}\bigl(1-e^{-u/n}\bigr)\;+\;
-\sum_{u=k+1}^{n}\bigl(1-e^{-k/n}\bigr)
+\sum_{i=1}^{k}\bigl(1-e^{-i/n}\bigr)\;+\;
+\sum_{i=k+1}^{n}\bigl(1-e^{-k/n}\bigr)
 \;=\;
-n - \underbrace{\sum_{u=1}^{k} e^{-u/n}}_{\text{left part}} - (n-k)e^{-k/n}.
+n - \underbrace{\sum_{i=1}^{k} e^{-i/n}}_{\text{left part}} - (n-k)e^{-k/n}.
 $$
 
-Since $\sum_{u=1}^{k} e^{-u/n} = e^{-1/n}\frac{1-e^{-k/n}}{1-e^{-1/n}} = k - \frac{k(k-1)}{2n}+O(n^{-2})$,
+Since $\sum_{i=1}^{k} e^{-i/n} = e^{-1/n}\frac{1-e^{-k/n}}{1-e^{-1/n}} = k - \frac{k(k-1)}{2n}+O(n^{-2})$,
 this reduces to $n - n e^{-k/n} + O(1)$, consistent with the coarser $n - n e^{-k/n}$.
 
-#### Phase B — Diagonal rows
+#### Phase B — Diagonal online nodes
 
-For each $j>k$, row $j$ connects only to column $j$.
-Let $E_j$ be the event that column $j$ is still empty after Phase A.
+For each $j>k$, online node $v_j$ connects only to offline node $u_j$.
+Let $E_j$ be the event that offline node $u_j$ is still empty after Phase A.
 
-- $\Pr(E_j)\approx e^{-k/n}$ (same hazard/survival logic as above, specialized to the group $u>k$).
-- Independently, $N_j\sim\mathrm{Pois}(1)$, so row $j$ succeeds on column $j$ with probability $\Pr(N_j\ge 1)=1-e^{-1}$.
+- $\Pr(E_j)\approx e^{-k/n}$ (same hazard/survival logic as above, specialized to the group $i>k$).
+- Independently, $N_j\sim\mathrm{Pois}(1)$, so online node $v_j$ succeeds on offline node $u_j$ with probability $\Pr(N_j\ge 1)=1-e^{-1}$.
 
 Hence
 
@@ -648,26 +648,26 @@ $$
 
 #### Why the $1-e^{-1}$ constant appears
 
-Within each row $j$, the random seat selection spreads its "unit of effort" uniformly
-over a large available set $S_j$, so the per-column hit probability is
-approximately $1/R_j$, and the **average** Phase-A hazard per column accumulates to $k/n$.
+Within each online node $v_j$, the random seat selection spreads its "unit of effort" uniformly
+over a large available set $S_j$, so the per-offline-node hit probability is
+approximately $1/R_j$, and the **average** Phase-A hazard per offline node accumulates to $k/n$.
 Survival is the product of "not hit" across independent Poisson draws,
-giving $e^{-k/n}$ (or, more finely for column $u$, $e^{-\min\{u,k\}/n}$).
+giving $e^{-k/n}$ (or, more finely for offline node $u_i$, $e^{-\min\{i,k\}/n}$).
 This is the discrete analogue of the survival-analysis identity $S=\exp(-\text{hazard})$,
 plus a **mass-transport** (double counting) identity to compute the mean hazard.
 
 #### Notes on accuracy and concentration
 
-- **With vs. without replacement:** the difference in a single row is $O(R_j^{-2})$,
-  and across $k=O(n)$ rows the cumulative effect is $o(1)$ in normalized expectation.
-- **Concentration:** $H_U^{(A)}$ is a bounded-difference functional of the per-row randomness
-  with row-wise Lipschitz constants $O(1/R_j)$ and $\sum O(1/R_j)=O(1)$,
+- **With vs. without replacement:** the difference in a single online node is $O(R_j^{-2})$,
+  and across $k=O(n)$ online nodes the cumulative effect is $o(1)$ in normalized expectation.
+- **Concentration:** $H_U^{(A)}$ is a bounded-difference functional of the per-online-node randomness
+  with online-node-wise Lipschitz constants $O(1/R_j)$ and $\sum O(1/R_j)=O(1)$,
   so Azuma–McDiarmid gives concentration at scale $O(n^{-1/2})$.
-- **Refined Phase-A formula** using $\Pr(\text{survive at }u)\approx e^{-\min\{u,k\}/n}$
+- **Refined Phase-A formula** using $\Pr(\text{survive at }u_i)\approx e^{-\min\{i,k\}/n}$
   yields
   $$
   \mathbb{E}[M^{(A)}]
-  \approx \sum_{u=1}^{k}\bigl(1-e^{-u/n}\bigr) + (n-k)\bigl(1-e^{-k/n}\bigr)
+  \approx \sum_{i=1}^{k}\bigl(1-e^{-i/n}\bigr) + (n-k)\bigl(1-e^{-k/n}\bigr)
   = n - n e^{-k/n} + O(1),
   $$
   consistent with the coarse expression.
