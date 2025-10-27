@@ -42,7 +42,7 @@ A successful assignment on $u$ yields reward $w_u$ and removes $u$ from availabi
 The objective becomes maximizing the **expected total weight** of successful offline vertices:
 
 $$
-\max \; \mathbb{E}\!\left[\sum_{u \in U} w_u \cdot \mathbf{1}\{u\ \text{is matched successfully}\}\right].
+\max  \mathbb{E}\!\left[\sum_{u \in U} w_u \cdot \mathbf{1}\{u\ \text{is matched successfully}\}\right].
 $$
 
 The unweighted model is the special case $w_u \equiv 1$.
@@ -138,8 +138,8 @@ $$
 \begin{aligned}
 \max \quad & \sum_{u \in U} w_u\cdot p_{uv} \cdot x_{uv} \\
 \text{s.t.}\quad
-& \sum_{v \in N(u)} p_{uv}\, x_{uv} \;\le\; 1 \qquad && \forall u \in U && (1) \\
-& \sum_{u \in N(v)} x_{uv} \;\le\; 1 \qquad && \forall v \in V && (2) \\
+& \sum_{v \in N(u)} p_{uv}\, x_{uv} \le 1 \qquad && \forall u \in U && (1) \\
+& \sum_{u \in N(v)} x_{uv} \le 1 \qquad && \forall v \in V && (2) \\
 & 0 \le x_{uv}
 \end{aligned}
 $$
@@ -264,7 +264,7 @@ _For any thresholds $ \theta\_{-u} $ of offline vertices other than $u$ and the 
 
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
-\;\ge\;
+\ge
 \int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, f(\theta_u)\, d\theta_u \, .
 $$
 
@@ -272,11 +272,11 @@ By the above characterization, $u$'s load equals $ \ell_u^{\infty} $ when $ \the
 
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
-\;\ge\;
+\ge
 \int_{0}^{\ell_u^{\infty}} e^{-\theta_u} F(\theta_u)\, d\theta_u
-\;+\;
++
 e^{-\ell_u^{\infty}} F(\ell_u^{\infty})
-\;=\;
+=
 \int_{0}^{\ell_u^{\infty}} e^{-\theta_u} f(\theta_u)\, d\theta_u \, .
 $$
 
@@ -292,10 +292,10 @@ For any thresholds $ \theta\_{-u} $ of offline vertices other than $u$ and the c
 $$
 \begin{aligned}
 \mathbb{E}_{\theta_u}\!\left[\sum_{v\in S} \beta_v \,\middle|\, \theta_{-u}\right]
-\;\ge\;
+\ge
 &\left(
 e^{-\ell_u^{\infty}}\, p_u(S)
-\;+\;
++
 \int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, d\theta_u
 \right) \\
 &\times \big(1 - f(\ell_u^{\infty})\big)\, .
@@ -437,7 +437,7 @@ We split the process into two phases:
 Total matches:
 
 $$
-M_{n,k} \;=\; M^{(A)} + M^{(B)}.
+M_{n,k} = M^{(A)} + M^{(B)}.
 $$
 
 #### Phase A — Per-online-node "hit probability" (discrete hazard)
@@ -449,18 +449,18 @@ each offline node $u_i\in S_j$ has the **same** conditional hit probability
 
 $$
 h_j
-\;=\;
+=
 \Pr(\text{online node }v_j\text{ selects a given }u_i\in S_j \mid S_j)
-\;=\;
+=
 \frac{\mathbb{E}[\,\min(N_j,R_j)\mid S_j]}{R_j}.
 $$
 
 > With-replacement "Poissonization" (often used for occupancy):
 
 $$
-\tilde h_j \;=\; 1-\mathbb{E}\!\left[\Big(1-\tfrac{1}{R_j}\Big)^{N_j}\Bigm|S_j\right]
-\;=\; 1-e^{-1/R_j}
-\;=\; \tfrac{1}{R_j}+O(R_j^{-2}).
+\tilde h_j = 1-\mathbb{E}\!\left[\Big(1-\tfrac{1}{R_j}\Big)^{N_j}\Bigm|S_j\right]
+= 1-e^{-1/R_j}
+= \tfrac{1}{R_j}+O(R_j^{-2}).
 $$
 
 > For large $R_j$ the without/with-replacement difference is $O(R_j^{-2})$, which is negligible
@@ -471,13 +471,13 @@ the total hit probability online node $v_j$ "sprays" across its available set is
 
 $$
 \sum_{u_i\in S_j} h_j
-\;=\;
+=
 R_j\cdot h_j
-\;=\;
+=
 \mathbb{E}[\min(N_j,R_j)\mid S_j]
-\;=\;
+=
 1-\Pr(N_j\ge R_j\mid S_j)
-\;\approx\;1
+\approx1
 \quad(\text{since typically }R_j\gg 1).
 $$
 
@@ -487,16 +487,16 @@ Let $U$ be a uniformly random offline node in $\{u_1,\dots,u_n\}$, sampled indep
 Define the **cumulative Phase-A hazard on offline node $U$** by
 
 $$
-H_U^{(A)} \;\overset{\text{def}}{=}\; \sum_{j=1}^{k} h_j\,\mathbf{1}\{\,U\in S_j\,\}.
+H_U^{(A)} \overset{\text{def}}{=} \sum_{j=1}^{k} h_j\,\mathbf{1}\{\,U\in S_j\,\}.
 $$
 
 Taking expectations and swapping sums (double counting):
 
 $$
 \sum_{i=1}^n \mathbb{E}[H_{u_i}^{(A)}]
-\;=\;
+=
 \sum_{j=1}^{k} \mathbb{E}\!\left[\sum_{u_i\in S_j} h_j\right]
-\;=\;
+=
 \sum_{j=1}^{k} \mathbb{E}[\min(N_j,R_j)].
 $$
 
@@ -504,10 +504,10 @@ Averaging over offline nodes:
 
 $$
 \boxed{
-\;\mathbb{E}[H_U^{(A)}]
-\;=\;
+\mathbb{E}[H_U^{(A)}]
+=
 \frac{1}{n}\sum_{j=1}^{k} \mathbb{E}[\min(N_j,R_j)]
-\;=\;
+=
 \frac{k}{n} + o(1).
 }
 $$
@@ -530,8 +530,8 @@ $$
 When each $h_j$ is small (here $h_j=O(1/R_j)=O(1/n)$ for almost all rows),
 
 $$
-\prod_{j}(1-h_j)\;=\;\exp\!\Big(-\sum_j h_j + O(\sum_j h_j^2)\Big)
-\;\approx\; e^{-H_U^{(A)}},
+\prod_{j}(1-h_j)=\exp\!\Big(-\sum_j h_j + O(\sum_j h_j^2)\Big)
+\approx e^{-H_U^{(A)}},
 $$
 
 and $\sum_j h_j^2=o(1)$. Concentration (bounded differences / Azuma–McDiarmid) further pins
@@ -539,17 +539,17 @@ $H_U^{(A)}$ near its mean, hence
 
 $$
 \mathbb{E}[\text{Phase-A survival of }U]
-\;=\;\mathbb{E}[e^{-H_U^{(A)}}]
-\;=\;e^{-\mathbb{E}[H_U^{(A)}]+o(1)}
-\;=\;e^{-k/n+o(1)}.
+=\mathbb{E}[e^{-H_U^{(A)}}]
+=e^{-\mathbb{E}[H_U^{(A)}]+o(1)}
+=e^{-k/n+o(1)}.
 $$
 
 Therefore,
 
 $$
 \boxed{
-\;\mathbb{E}[M^{(A)}]
-\;=\; n\;-\;n\,e^{-k/n} + o(n).
+\mathbb{E}[M^{(A)}]
+= n-n\,e^{-k/n} + o(n).
 }
 $$
 
@@ -557,10 +557,10 @@ $$
 
 $$
 \mathbb{E}[M^{(A)}]
-\;\approx\;
-\sum_{i=1}^{k}\bigl(1-e^{-i/n}\bigr)\;+\;
+\approx
+\sum_{i=1}^{k}\bigl(1-e^{-i/n}\bigr)+
 \sum_{i=k+1}^{n}\bigl(1-e^{-k/n}\bigr)
-\;=\;
+=
 n - \underbrace{\sum_{i=1}^{k} e^{-i/n}}_{\text{left part}} - (n-k)e^{-k/n}.
 $$
 
@@ -579,8 +579,8 @@ Hence
 
 $$
 \boxed{
-\;\mathbb{E}[M^{(B)}]
-\;\approx\;
+\mathbb{E}[M^{(B)}]
+\approx
 (n-k)\,e^{-k/n}\,(1-e^{-1}).
 }
 $$
@@ -592,7 +592,7 @@ $$
 \mathbb{E}[M_{n,k}]
 &= \mathbb{E}[M^{(A)}] + \mathbb{E}[M^{(B)}] \\
 &\approx \bigl(n - n e^{-k/n}\bigr) + \bigl((n-k)e^{-k/n}(1-e^{-1})\bigr) \\
-&= n\;-\;e^{-k/n}\,\Bigl(k + (n-k)e^{-1}\Bigr).
+&= n-e^{-k/n}\,\Bigl(k + (n-k)e^{-1}\Bigr).
 \end{aligned}
 $$
 
@@ -600,8 +600,8 @@ Equivalently, with $\alpha=k/n$,
 
 $$
 \boxed{
-\;\frac{\mathbb{E}[M_{n,k}]}{n}
-\;\approx\;
+\frac{\mathbb{E}[M_{n,k}]}{n}
+\approx
 1 - e^{-\alpha}\,\bigl(\alpha + (1-\alpha)e^{-1}\bigr),\quad \alpha\in[0,1].
 }
 $$
@@ -629,9 +629,9 @@ Then
 
 $$
 g'(\alpha)=e^{-\alpha}\,\bigl((1-2c)-(1-c)\alpha\bigr)=0
-\;\Longrightarrow\;
+\Longrightarrow
 \boxed{
-\;\alpha^*=\frac{1-2c}{1-c}=\frac{e-2}{\,e-1\,}=1-\frac{1}{e-1}\approx 0.418023.
+\alpha^*=\frac{1-2c}{1-c}=\frac{e-2}{\,e-1\,}=1-\frac{1}{e-1}\approx 0.418023.
 }
 $$
 
@@ -639,7 +639,7 @@ At $\alpha^*$, $g$ is maximized (so $f$ is minimized). The minimum value is
 
 $$
 \boxed{
-\;f_{\min}
+f_{\min}
 =1-(1-e^{-1})\,e^{-\alpha^*}
 =1-(1-e^{-1})\,\exp\!\Bigl(-\frac{e-2}{e-1}\Bigr)
 \approx 0.583845.
@@ -661,25 +661,25 @@ $$
   - Changing $v_j$'s random choice affects $H_U^{(A)}$ by at most $1/R_j$ (it can only "hit" $U$ with probability $\approx 1/R_j$)
   - After summing across $N_j \leq L = O(\log n)$ attempts (since $N_j \sim \mathrm{Pois}(1)$ is typically small), we get Lipschitz constant:
     $$
-    c_j \;\leq\; \frac{CL}{n-j+1} \;\leq\; \frac{CL}{n(1-\alpha)}, \quad \text{where } L = O(\log n)
+    c_j \leq \frac{CL}{n-j+1} \leq \frac{CL}{n(1-\alpha)}, \quad \text{where } L = O(\log n)
     $$
 
   **Applying Azuma–McDiarmid.** Define $M_j = \mathbb{E}[H_U^{(A)} \mid v_1,\dots,v_j \text{ processed}]$ as a Doob martingale. The bounded differences give:
 
   $$
   \sum_{j=1}^k c_j^2
-  \;\leq\;
+  \leq
   \frac{C^2L^2}{n^2} \sum_{j=1}^k \frac{1}{(1-\frac{j-1}{n})^2}
-  \;=\; O\left(\frac{(\log n)^2}{n}\right)
+  = O\left(\frac{(\log n)^2}{n}\right)
   $$
 
   By the Azuma–McDiarmid inequality (for martingales with bounded differences), for any $\varepsilon > 0$:
 
   $$
   \Pr\bigl(|H_U^{(A)} - \mathbb{E}[H_U^{(A)}]| > \varepsilon\bigr)
-  \;\leq\;
+  \leq
   2\exp\left(-\frac{2\varepsilon^2}{\sum_{j=1}^k c_j^2}\right)
-  \;=\;
+  =
   2\exp\left(-\Theta\left(\frac{\varepsilon^2 n}{(\log n)^2}\right)\right)
   $$
 
@@ -687,9 +687,9 @@ $$
 
   $$
   \mathbb{E}[e^{-H_U^{(A)}}]
-  \;=\;
+  =
   e^{-\mathbb{E}[H_U^{(A)}] + o(1)}
-  \;=\;
+  =
   e^{-k/n + o(1)}
   $$
 
@@ -708,9 +708,9 @@ For the **random selection** mechanism,
 
 $$
 \boxed{
-\mathbb{E}[M_{n,k}] \;\approx\; n - e^{-k/n}\,\bigl(k + (n-k)e^{-1}\bigr), \quad
+\mathbb{E}[M_{n,k}] \approx n - e^{-k/n}\,\bigl(k + (n-k)e^{-1}\bigr), \quad
 \frac{\mathbb{E}[M_{n,k}]}{n}
-\;\approx\;
+\approx
 1 - e^{-\alpha}\bigl(\alpha+(1-\alpha)e^{-1}\bigr).
 }
 $$
