@@ -723,6 +723,8 @@ $$
 
 while the extreme cases $k=0$ and $k=n$ both give $\mathbb{E}[M]/n\approx 1-e^{-1}$.
 
+---
+
 ## Yet another Primal Dual Analyses
 
 ### Analyses for $\alpha$
@@ -730,19 +732,21 @@ while the extreme cases $k=0$ and $k=n$ both give $\mathbb{E}[M]/n\approx 1-e^{-
 The same as previous: For any thresholds $\theta_{-u}$ of offline vertices other than $u$ and the corresponding $ \ell_u^{\infty} $.
 
 In the matching process, each online vertex contributes an infinitesimal load $p$ to $\alpha_u$, so the incremental change is $\Delta \alpha_u = p \cdot f(\theta_u)$.
-However, this increment only occurs when vertex $u$ has not yet succeeded (i.e., when $\theta_u > \ell$), which happens with probability $\Pr[\theta_u > \ell] = e^{-\ell}$.
+However, this increment only occurs when vertex $u$ has not yet succeeded (i.e., when $\theta_u > \ell_u$), which happens with probability $\Pr[\theta_u > \ell_u] = e^{-\ell_u}$.
 
 Aggregating these infinitesimal updates over the entire process, the total increase in $\alpha_u$ is the probability that $\alpha_u$ exceeds a threshold $\theta$ weighted by $f(\theta)$:
 
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
 =
-\int_{0}^{\ell_u^{\infty}} P[ \theta_u > \ell] f(\theta_u)\, d\theta_u
+\int_{0}^{\ell_u^{\infty}} P[ \theta_u > \ell_u] f(\ell_u)\, d\ell_u
 =
-\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, f(\theta_u)\, d\theta_u \, .
+\int_{0}^{\ell_u^{\infty}} e^{-\ell_u}\, f(\ell_u)\, d\ell_u \, .
 $$
 
 > It's not an inequation but an equality.
+
+---
 
 ### Analyses for $\beta$
 
@@ -750,13 +754,15 @@ Some Definitions:
 
 Fix $\theta_{-u}$ and let $\theta_u = \infty$ (background world for some fantasy description).
 
-$S$ be any feasible set of offline vertices that $S \subseteq N(u)$.
+$S$ be any feasible set of online vertices that $S \subseteq N(u)$.
 
 Let $\ell_u^{\infty}$ be the final load on $u$.
 
 Define $R = |S|$, there are $R$ events that each online vertex $v \in S$ is matched to some offline vertex or may not be matched.
 
-In each event, $\beta_v = p \cdot (1 - f(\ell_v))$ if matched, and $0$ otherwise. ($\ell_v$ means in this world, the load of the offline vertex that $v$ is matched to when this event happened. Doesn't have to be $u$)
+In each event, $\beta_v = p \cdot (1 - f(\ell_v))$ if matched, and $0$ otherwise.
+
+> $\ell_v$ means in this world, the load of the offline vertex that $v$ is matched to when this event happened. Doesn't have to be $u$
 
 The events in this world occur in a continuous, infinite sequence when pushing the limit. As the load on vertex $u$ gradually increases from $0$ to $\theta$, many events occur. Each event corresponds to an online vertex $v \in S$ being matched (to some offline vertex, not necessarily $u$).
 
@@ -773,3 +779,52 @@ $$
 $$
 
 This measure captures the "mass" of online vertices from $S$ that are matched during the period when $u$'s load grows from $a$ to $b$.
+
+**Properties when vanishing probabilities ($p \to 0$):**
+
+When the probabilities are vanishing, $\mu_S$ is absolutely continuous with respect to the Lebesgue measure, and there exists a Radon-Nikodym derivative (density function):
+
+$$
+\varphi_S(\theta) := \frac{d\mu_S}{d\theta} (\theta),
+\quad
+M_S(\theta) = \int_0^{\theta} \varphi_S(z)\, dz,
+\quad
+\int_0^{\ell_u^{\infty}} \varphi_S(z)\, dz = p \cdot R.
+$$
+
+Note that $M_S(\ell^\infty) \geq p_u(S)$ (because $p_u(S) = \min\{\sum_{v \in S} p, 1\}$, and in the "background world" where $u$ is always available, $M_S(\ell^\infty) = p \cdot |S| \geq p_u(S)$).
+
+Intuitively, $\varphi_S(\theta)$ is the "load density" from $S$ at threshold $\theta$ (it describes the rate at which online vertices from $S$ are being matched when $u$'s load is at $\theta$). Note that $\ell_u^{\infty}$ is the total load on $u$ when $\theta_u = \infty$ in this background world.
+
+When a micro event happened, if $u$ load is $\ell_u$, then the contribution to
+
+$$
+\beta_v = p \cdot (1 - f(\ell_v)) \geq p \cdot (1 - f(\ell_u)) \quad (\text{since } \ell_v \leq \ell_u)
+$$
+
+---
+
+#### When $\theta_u \geq \ell_u^{\infty}$
+
+All online vertices $v \in S$ are matched to neighbors, so the total contribution is:
+
+$$
+\begin{aligned}
+A &= P[\theta_u \geq \ell_u^{\infty}] \cdot \sum_{v \in S} \beta_v \\
+&= e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_v) \right) d\mu_S(\theta_u) \\
+&\geq e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\theta_u) \right) \cdot \varphi_S(\theta_u)\, d\theta_u
+\end{aligned}
+$$
+
+> Note that
+
+$$
+\begin{aligned}
+& e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\theta_u) \right) \cdot \varphi_S(\theta_u)\, d\theta_u \\
+\geq & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot \int_0^{\ell_u^{\infty}}\varphi_S(\theta_u)\, d\theta_u \\
+= & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot M_S(\ell_u^{\infty})
+\geq e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot p_u(S)
+\end{aligned}
+$$
+
+> This equivalent with the [HZ20] paper's beta's LHS scaling.
