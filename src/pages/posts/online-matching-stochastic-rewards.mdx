@@ -260,7 +260,7 @@ Let $F(\ell)=\int_0^{\ell} f(z) d z$ denote the integral of $f$. Note that we ha
 **Contribution from $ \alpha_u $.**  
 We now proceed to prove approximate dual feasibility using the above characterization. First, consider the contribution from the offline vertex $u$.
 
-_For any thresholds $ \theta\_{-u} $ of offline vertices other than $u$ and the corresponding $ \ell_u^{\infty} $:_
+_For any thresholds $\theta_{-u}$ of offline vertices other than $u$ and the corresponding $ \ell*u^{\infty} $:*
 
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
@@ -722,3 +722,54 @@ $$
 $$
 
 while the extreme cases $k=0$ and $k=n$ both give $\mathbb{E}[M]/n\approx 1-e^{-1}$.
+
+## Yet another Primal Dual Analyses
+
+### Analyses for $\alpha$
+
+The same as previous: For any thresholds $\theta_{-u}$ of offline vertices other than $u$ and the corresponding $ \ell_u^{\infty} $.
+
+In the matching process, each online vertex contributes an infinitesimal load $p$ to $\alpha_u$, so the incremental change is $\Delta \alpha_u = p \cdot f(\theta_u)$.
+However, this increment only occurs when vertex $u$ has not yet succeeded (i.e., when $\theta_u > \ell$), which happens with probability $\Pr[\theta_u > \ell] = e^{-\ell}$.
+
+Aggregating these infinitesimal updates over the entire process, the total increase in $\alpha_u$ is the probability that $\alpha_u$ exceeds a threshold $\theta$ weighted by $f(\theta)$:
+
+$$
+\mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
+=
+\int_{0}^{\ell_u^{\infty}} P[ \theta_u > \ell] f(\theta_u)\, d\theta_u
+=
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, f(\theta_u)\, d\theta_u \, .
+$$
+
+> It's not an inequation but an equality.
+
+### Analyses for $\beta$
+
+Some Definitions:
+
+Fix $\theta_{-u}$ and let $\theta_u = \infty$ (background world for some fantasy description).
+
+$S$ be any feasible set of offline vertices that $S \subseteq N(u)$.
+
+Let $\ell_u^{\infty}$ be the final load on $u$.
+
+Define $R = |S|$, there are $R$ events that each online vertex $v \in S$ is matched to some offline vertex or may not be matched.
+
+In each event, $\beta_v = p \cdot (1 - f(\ell_v))$ if matched, and $0$ otherwise. ($\ell_v$ means in this world, the load of the offline vertex that $v$ is matched to when this event happened. Doesn't have to be $u$)
+
+The events in this world occur in a continuous, infinite sequence when pushing the limit. As the load on vertex $u$ gradually increases from $0$ to $\theta$, many events occur. Each event corresponds to an online vertex $v \in S$ being matched (to some offline vertex, not necessarily $u$).
+
+Define the cumulative distribution function that tracks which online vertices from $S$ have been matched by the time $u$'s load reaches $\theta$:
+
+$$
+M_S(\theta) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \theta \}|
+$$
+
+The **Lebesgue–Stieltjes measure** $\mu_S$ is defined as:
+
+$$
+\mu_S((a,b]) := M_S(b) - M_S(a), \quad 0 \leq a < b \leq \ell_u^{\infty}
+$$
+
+This measure captures the "mass" of online vertices from $S$ that are matched during the period when $u$'s load grows from $a$ to $b$.
