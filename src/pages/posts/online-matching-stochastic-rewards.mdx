@@ -338,48 +338,53 @@ Therefore, there is at most one index $j$ such that $\ell_j<\ell_u^{\infty}$ and
 
 ### Solving the Differential Inequality
 
-For ease of notations, we write $\ell_u^{\infty}$ as $\ell, p_u(S)$ as $p$, and $\theta_u$ as $\theta$. Then, =becomes:
+For ease of notations, we write $\ell_u^{\infty}$ as $\ell$, $p_u(S)$ as $p$, and $\theta_u$ as $\theta$. The dual feasibility inequality becomes:
 
 $$
 \int_0^{\ell} e^{-\theta} f(\theta) d \theta+\left(e^{-\ell} p+\int_0^{\ell} e^{-\theta}(p-(\ell-\theta))^{+} d \theta\right)(1-f(\ell)) \geq \Gamma \cdot p .
 $$
 
-First, note that the $z^{+}$operation effectively restricts the second integration in the above equation to be from max $\{0, \ell-p\}$ to $\ell$. This allows us to simplify the above equation by taking away the $z^{+}$operation. Concretely, it suffices to ensure that for any $0 \leq p<\ell$ :
+First, note that the $z^{+}$ operation effectively restricts the second integration in the above equation to be from $\max \{0, \ell-p\}$ to $\ell$. This allows us to simplify by splitting into two cases.
+
+**Case 1:** When $0 \leq p < \ell$, we need:
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+p}-e^{-\ell}\right) \geq \Gamma \cdot p,
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+p}-e^{-\ell}\right) \geq \Gamma \cdot p \tag{Case-I}
 $$
 
-and for any $0 \leq \ell \leq p$ :
+**Case 2:** When $0 \leq \ell \leq p$, we need:
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(1-\ell+p-e^{-\ell}\right) \geq \Gamma \cdot p .
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(1-\ell+p-e^{-\ell}\right) \geq \Gamma \cdot p \tag{Case-II}
 $$
 
-Then, we show that the worst-case scenarios are when there is a unit mass of online neighbors, i.e., when $p = 1$.
+Then, we show that the worst-case scenario occurs when there is a unit mass of online neighbors, i.e., when $p = 1$.
+
+For **Case-II** with $p = 1$, we note:
 
 $$
 1-f(\ell) \leq 1-f(0) \leq \Gamma
 $$
 
-for Eqn. (7). So the lemma follows.
-Then it suffices to solve the following simplified differential inequalities subject to the boundary condition that $f(0)=1-\Gamma$. For any $\ell>1$, we need:
+So the lemma follows. Hence it suffices to solve the following simplified differential inequalities subject to the boundary condition that $f(0)=1-\Gamma$.
+
+For any $\ell>1$, we need (**Case-I** with $p=1$):
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+1}-e^{-\ell}\right) \geq \Gamma
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+1}-e^{-\ell}\right) \geq \Gamma \tag{$\ell > 1$}
 $$
 
-while for any $0 \leq \ell \leq 1$, we need:
+while for any $0 \leq \ell \leq 1$, we need (**Case-II** with $p=1$):
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(2-\ell-e^{-\ell}\right) \geq \Gamma
+\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(2-\ell-e^{-\ell}\right) \geq \Gamma \tag{$\ell \leq 1$}
 $$
 
-Right Boundary Condition. To further simplification, we impose a right boundary condition that it suffices to ensure that $f(\ell)=1-\frac{1}{e}$ for $\ell \geq 1$.
+**Right Boundary Condition.** To further simplify, we impose a right boundary condition that it suffices to ensure that $f(\ell)=1-\frac{1}{e}$ for $\ell \geq 1$.
 
-Lemma 11. Suppose $f:[0,1] \mapsto \mathbf{R}^{+}$is a non-decreasing function such that $f(0)=1-\Gamma, f(1)= 1-\frac{1}{e}$, and Eqn. (9) holds for any $0 \leq \ell \leq 1$. Then, the extension of $f$ such that $f(\ell)=f(1)=1-\frac{1}{e}$ for all $\ell>1$ satisfies Eqn. (4) for all $\ell \geq 0$.
+**Lemma.** Suppose $f:[0,1] \mapsto \mathbf{R}^{+}$ is a non-decreasing function such that $f(0)=1-\Gamma$, $f(1)= 1-\frac{1}{e}$, and the inequality for $\ell \leq 1$ holds for any $0 \leq \ell \leq 1$. Then, the extension of $f$ such that $f(\ell)=f(1)=1-\frac{1}{e}$ for all $\ell>1$ satisfies the dual feasibility inequality for all $\ell \geq 0$.
 
-Proof. By the assumption of $f$, it suffices to show that the difference between the RHS of Eqn. (8) when with any $\ell>1$ and that when $\ell=1$ is non-negative. The difference is (recalling that $f(\ell)=1-1 / e$ for all $\ell \geq 1$ ):
+_Proof._ By the assumption of $f$, it suffices to show that the difference between the LHS of the inequality for $\ell > 1$ with any $\ell>1$ and that when $\ell=1$ is non-negative. The difference is (recalling that $f(\ell)=1-1 / e$ for all $\ell \geq 1$):
 
 $$
 \begin{aligned}
@@ -390,14 +395,14 @@ $$
 \end{aligned}
 $$
 
-As a result, it suffices to find a non-decreasing function $f$ subject to the boulhdary conditions $f(0)=1-\Gamma$ and $f(1)=1-1 / e$, such that Eqn.(9) holds for any $0 \leq \ell \leq 1$. Solving this differential inequality for $f$ gives,
+As a result, it suffices to find a non-decreasing function $f$ subject to the boundary conditions $f(0)=1-\Gamma$ and $f(1)=1-1 / e$, such that the inequality for $\ell \leq 1$ holds for any $0 \leq \ell \leq 1$. Solving this differential inequality for $f$ gives,
 
 $$
 f(x)=\frac{1}{h(x)}\left(1-\frac{1}{e}+\int_x^1\left(1-e^{-y}\right) g(y) h(y) d y\right)
 $$
 
 where $g(x)=\frac{1}{2-x-e^{-x}}$, and $h(x)=\exp \left(\int_x^1 g(z) d z\right)$.
-To conclude, we find the $f(x)$ shown in Eqn.(5). Thus $\Gamma=1-f(0) \approx 0.576$.
+To conclude, we obtain the function $f(x)$ described above. Thus $\Gamma=1-f(0) \approx 0.576$. $\square$
 
 ---
 
@@ -725,9 +730,9 @@ while the extreme cases $k=0$ and $k=n$ both give $\mathbb{E}[M]/n\approx 1-e^{-
 
 ---
 
-## Yet another Primal Dual Analyses
+# Yet another Primal Dual Analyses
 
-### Analyses for $\alpha$
+## Analyses for $\alpha$
 
 The same as previous: For any thresholds $\theta_{-u}$ of offline vertices other than $u$ and the corresponding $ \ell_u^{\infty} $.
 
@@ -748,7 +753,7 @@ $$
 
 ---
 
-### Analyses for $\beta$
+## Analyses for $\beta$
 
 Some Definitions:
 
@@ -804,7 +809,9 @@ $$
 
 ---
 
-#### When $\theta_u \geq \ell_u^{\infty}$
+Now we analyze when each $\theta_u \sim \mathrm{EXP}(1)$.
+
+### When $\theta_u \geq \ell_u^{\infty}$ (warm-up)
 
 All online vertices $v \in S$ are matched to neighbors, so the total contribution is:
 
@@ -828,3 +835,22 @@ $$
 $$
 
 > This equivalent with the [HZ20] paper's beta's LHS scaling.
+
+### Definition of Extended World
+
+For each threshold $\theta_u$, define another world where $\theta_u$ be the threshold of $u$ and all other thresholds $\theta_{-u}$ remain the same.
+
+Define cumulative distribution function on this world:
+
+$$
+M_S^{(\theta_u)}(\theta) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \theta \}|
+$$
+
+$$
+\mu_S^{(\theta_u)}((a,b]) := M_S^{(\theta_u)}(b) - M_S^{(\theta_u)}(a), \quad
+\varphi_S^{(\theta_u)}(z) := \frac{d\mu_S^{(\theta_u)}}{dz}(z),
+$$
+
+where $M_S^{(\theta_u)}(\cdot)$ tracks the mass of online vertices $v$ from $S$ matched when $u$'s load is at most $\cdot$ given $\theta_u$.
+
+> $M_S(\theta) = M_S^{(\theta_u)}(\theta)$ when $\theta_u \geq \ell_u^{\infty}$.
