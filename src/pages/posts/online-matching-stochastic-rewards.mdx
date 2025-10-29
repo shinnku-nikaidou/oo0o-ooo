@@ -774,7 +774,7 @@ The events in this world occur in a continuous, infinite sequence when pushing t
 Define the cumulative distribution function that tracks which online vertices from $S$ have been matched by the time $u$'s load reaches $\theta$:
 
 $$
-M_S(\theta) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \theta \}|
+M_S(\ell) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \ell \}|
 $$
 
 The **Lebesgue–Stieltjes measure** $\mu_S$ is defined as:
@@ -790,16 +790,16 @@ This measure captures the "mass" of online vertices from $S$ that are matched du
 When the probabilities are vanishing, $\mu_S$ is absolutely continuous with respect to the Lebesgue measure, and there exists a Radon-Nikodym derivative (density function):
 
 $$
-\varphi_S(\theta) := \frac{d\mu_S}{d\theta} (\theta),
+\varphi_S(\ell) := \frac{d\mu_S}{d\ell} (\ell),
 \quad
-M_S(\theta) = \int_0^{\theta} \varphi_S(z)\, dz,
+M_S(\ell) = \int_0^{\ell} \varphi_S(z)\, dz,
 \quad
 \int_0^{\ell_u^{\infty}} \varphi_S(z)\, dz = p \cdot R.
 $$
 
 Note that $M_S(\ell^\infty) \geq p_u(S)$ (because $p_u(S) = \min\{\sum_{v \in S} p, 1\}$, and in the "background world" where $u$ is always available, $M_S(\ell^\infty) = p \cdot |S| \geq p_u(S)$).
 
-Intuitively, $\varphi_S(\theta)$ is the "load density" from $S$ at threshold $\theta$ (it describes the rate at which online vertices from $S$ are being matched when $u$'s load is at $\theta$). Note that $\ell_u^{\infty}$ is the total load on $u$ when $\theta_u = \infty$ in this background world.
+Intuitively, $\varphi_S(\ell)$ is the "load density" from $S$ at load $\ell$ (it describes the rate at which online vertices from $S$ are being matched when $u$'s load is at $\ell$). Note that $\ell_u^{\infty}$ is the total load on $u$ when $\theta_u = \infty$ in this background world.
 
 When a micro event happened, if $u$ load is $\ell_u$, then the contribution to
 
@@ -819,7 +819,7 @@ $$
 \begin{aligned}
 A &= P[\theta_u \geq \ell_u^{\infty}] \cdot \sum_{v \in S} \beta_v \\
 &= e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_v) \right) d\mu_S(\theta_u) \\
-&\geq e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\theta_u) \right) \cdot \varphi_S(\theta_u)\, d\theta_u
+&\geq e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_u) \right) \cdot \varphi_S(\ell_u)\, d\ell_u
 \end{aligned}
 $$
 
@@ -827,8 +827,8 @@ $$
 
 $$
 \begin{aligned}
-& e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\theta_u) \right) \cdot \varphi_S(\theta_u)\, d\theta_u \\
-\geq & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot \int_0^{\ell_u^{\infty}}\varphi_S(\theta_u)\, d\theta_u \\
+& e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_u) \right) \cdot \varphi_S(\ell_u)\, \d\ell_u \\
+\geq & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot \int_0^{\ell_u^{\infty}}\varphi_S(\ell_u)\, d\ell_u \\
 = & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot M_S(\ell_u^{\infty})
 \geq e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot p_u(S)
 \end{aligned}
@@ -843,7 +843,7 @@ For each threshold $\theta_u$, define another world where $\theta_u$ be the thre
 Define cumulative distribution function on this world:
 
 $$
-M_S^{(\theta_u)}(\theta) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \theta \}|
+M_S^{(\theta_u)}(\ell) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \ell \}|
 $$
 
 $$
@@ -854,3 +854,41 @@ $$
 where $M_S^{(\theta_u)}(\cdot)$ tracks the mass of online vertices $v$ from $S$ matched when $u$'s load is at most $\cdot$ given $\theta_u$.
 
 > $M_S(\theta) = M_S^{(\theta_u)}(\theta)$ when $\theta_u \geq \ell_u^{\infty}$.
+
+so that:
+
+$$
+\begin{aligned}
+\mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right]
+&= \mathbb{E}_{\theta_u}[F(\theta_u) \mid \theta_{-u}] \\
+&= \int_0^{\infty} e^{-\theta_u} F(\theta_u)\, d \theta_u
+\end{aligned}
+$$
+
+where
+
+$$
+\begin{aligned}
+F(\theta_u) &:= \int_0^{\infty} (1 - f(\ell_v))\, d \mu_S^{(\theta_u)}(z) \\
+&\geq \int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, d \ell_u
+\end{aligned}
+$$
+
+Therefore,
+
+$$
+\mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right]
+\geq
+\int_0^{\infty} e^{-\theta_u}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, d \ell_u\right] d \theta_u
+$$
+
+1. When $\theta_u \geq \ell_u^{\infty}$.
+
+It's the same world as before ($\theta_u = \infty$), so that $\mu_S^{(\theta_u)} = \mu_S$ and $ \operatorname{supp} \mu_S \subseteq [0, \ell_u^{\infty}] $.
+
+Hence,
+
+$$
+\int_{\ell_u^{\infty}}^{\infty} e^{-\theta}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta)}(\ell_u)\, d\ell_u\right] d\theta
+= e^{-\ell_u^{\infty}} \int_0^{\ell_u^{\infty}} (1-f(\ell_u)) \varphi_S(\ell_u)\, d\ell_u
+$$
