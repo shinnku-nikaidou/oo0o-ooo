@@ -768,6 +768,12 @@ Define $R = |S|$, there are $R$ events that each online vertex $v \in S$ is matc
 In each event, $\beta_v = p \cdot (1 - f(\ell_v))$ if matched, and $0$ otherwise.
 
 > $\ell_v$ means in this world, the load of the offline vertex that $v$ is matched to when this event happened. Doesn't have to be $u$
+> When an online vertex $v \in S$ is matched in the algorithm:
+>
+> - The algorithm greedily selects the neighbor with the **minimum current load** among all available neighbors.
+> - If offline vertex $u$ is still available at this moment with load $\ell_u \leq \ell_u^{\infty}$, then $v$ matched neighbor's load satisfies $\ell_v \leq \ell_u$.
+> - Since the dual assignment function $f$ is **non-decreasing** (monotone), we have:
+>   $$\beta_v = p(1 - f(\ell_v)) \geq p(1 - f(\ell_u))$$
 
 The events in this world occur in a continuous, infinite sequence when pushing the limit. As the load on vertex $u$ gradually increases from $0$ to $\theta$, many events occur. Each event corresponds to an online vertex $v \in S$ being matched (to some offline vertex, not necessarily $u$).
 
@@ -821,7 +827,7 @@ All online vertices $v \in S$ are matched to neighbors, so the total contributio
 $$
 \begin{aligned}
 A &= P[\theta_u \geq \ell_u^{\infty}] \cdot \sum_{v \in S} \beta_v \\
-&= e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_v) \right) \d\mu_S(\theta_u) \\
+&= e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_v) \right) \d\mu_S(\ell_u) \\
 &\geq e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_u) \right) \cdot \varphi_S(\ell_u)\, \d\ell_u
 \end{aligned}
 $$
@@ -1005,3 +1011,44 @@ $$
 which is the "measure version" above.
 
 Taking $p \to 0$ under absolute continuity substitution, we obtain the "density version" with pointwise upper bound $\varphi_S(\ell) - \varphi_S^{(\theta_u)}(\ell) \leq 1$ when $\ell \in (\theta_u, \ell_u^{\infty}]$.
+
+**Applying the "measure version" descending bound:**
+
+$$
+\mu_S^{\left(\theta_u\right)}((0, \ell_u]) \geq \mu_S((0, \ell_u])-\left(\ell_u-\theta_u\right), \quad \forall \theta_u \leq \ell_u \leq \ell_u^{\infty} .
+$$
+
+
+Therefore,
+
+$$
+\int_0^{\infty}(1-f(\ell_u)) \d \mu_S^{\left(\theta_u\right)}(\ell_u) \geq \int_0^{\ell_u^{\infty}}(1-f(\ell_u)) \d \mu_S(\ell_u)-\int_{\theta_u}^{\ell_u^{\infty}}(1-f(\ell_u)) \d \ell_u
+$$
+
+
+Using the lower bound $(1-f(\ell_u)) \geq\left(1-f\left(\ell_u^{\infty}\right)\right)$ on the second term, we obtain:
+
+$$
+\int_0^{\infty}(1-f) \d \mu_S^{\left(\theta_u\right)} \geq \underbrace{\int_0^{\ell_u^{\infty}}(1-f) \d \mu_S}_{\geq\left(1-f\left(\ell_u^{\infty}\right)\right) M_S\left(\ell_u^{\infty}\right) \geq\left(1-f\left(\ell_u^{\infty}\right)\right) p_u(S)}-\left(1-f\left(\ell_u^{\infty}\right)\right)\left(\ell_u^{\infty}-\theta_u\right)
+$$
+
+
+Thus, for this particular $\theta_u$:
+
+$$
+\int_0^{\infty}(1-f) \varphi_S^{\left(\theta_u\right)} \d \ell_u \geq\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)_{+} \cdot\left(1-f\left(\ell_u^{\infty}\right)\right)
+$$
+
+
+Substituting this back into
+$\int_0^{\ell_u^{\infty}} e^{-\theta_u}[\cdots] \d \theta_u$, we get:
+
+$$
+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)_{+} \d \theta_u \cdot\left(1-f\left(\ell_u^{\infty}\right)\right)
+$$
+
+**Combining the two segments of $\theta_u$ integrals**, we obtain the standard total lower bound:
+
+$$
+\mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] \geq\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta}\left(p_u(S)-\left(\ell_u^{\infty}-\theta\right)\right)_{+} \d \theta\right)\left(1-f\left(\ell_u^{\infty}\right)\right)_{\dot{\uparrow}}
+$$
