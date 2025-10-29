@@ -774,7 +774,7 @@ The events in this world occur in a continuous, infinite sequence when pushing t
 Define the cumulative distribution function that tracks which online vertices from $S$ have been matched by the time $u$'s load reaches $\theta$:
 
 $$
-M_S(\ell) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \ell \}|
+M_S(\ell_u) := p \cdot |\{ v \in S \mid \text{ the event } v \text{ is matched happened when } u\text{'s load} \leq \ell_u \}|
 $$
 
 The **Lebesgue–Stieltjes measure** $\mu_S$ is defined as:
@@ -790,11 +790,14 @@ This measure captures the "mass" of online vertices from $S$ that are matched du
 When the probabilities are vanishing, $\mu_S$ is absolutely continuous with respect to the Lebesgue measure, and there exists a Radon-Nikodym derivative (density function):
 
 $$
-\varphi_S(\ell) := \frac{d\mu_S}{d\ell} (\ell),
+\varphi_S(\ell_u) := \frac{d\mu_S}{d\ell_u} (\ell_u),
 \quad
-M_S(\ell) = \int_0^{\ell} \varphi_S(z)\, \d z,
+\varphi_S(\ell_u) = 0 \text{ for } \ell_u > \ell_u^{\infty},
+\\ \quad \\
 \quad
-\int_0^{\ell_u^{\infty}} \varphi_S(z)\, \d z = p \cdot R.
+M_S(\ell_u) = \int_0^{\ell_u} \varphi_S(z)\, \d z,
+\quad
+\int_0^{\ell_u^{\infty}} \varphi_S(\ell_u)\, \d \ell_u = p \cdot R.
 $$
 
 Note that $M_S(\ell^\infty) \geq p_u(S)$ (because $p_u(S) = \min\{\sum_{v \in S} p, 1\}$, and in the "background world" where $u$ is always available, $M_S(\ell^\infty) = p \cdot |S| \geq p_u(S)$).
