@@ -42,7 +42,7 @@ A successful assignment on $u$ yields reward $w_u$ and removes $u$ from availabi
 The objective becomes maximizing the **expected total weight** of successful offline vertices:
 
 $$
-\max  \mathbb{E}\!\left[\sum_{u \in U} w_u \cdot \mathbf{1}\{u\ \text{is matched successfully}\}\right].
+\max \mathbb{E} \left[\sum_{u \in U} w_u \cdot \mathbf{1}\{u\ \text{is matched successfully}\}\right].
 $$
 
 The unweighted model is the special case $w_u \equiv 1$.
@@ -869,7 +869,7 @@ where
 
 $$
 \begin{aligned}
-F(\theta_u) &:= \int_0^{\infty} (1 - f(\ell_v))\, \d \mu_S^{(\theta_u)}(z) \\
+F(\theta_u) &:= \int_{\ell_u \in [0,\infty)} (1 - f(\ell_v))\, \d \mu_S^{(\theta_u)}(\ell_u) \\
 &\geq \int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, \d \ell_u
 \end{aligned}
 $$
@@ -892,3 +892,113 @@ $$
 \int_{\ell_u^{\infty}}^{\infty} e^{-\theta}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta)}(\ell_u)\, \d\ell_u\right] \d\theta
 = e^{-\ell_u^{\infty}} \int_0^{\ell_u^{\infty}} (1-f(\ell_u)) \varphi_S(\ell_u)\, \d\ell_u
 $$
+
+2. When $0 \leq \theta < \ell_u^{\infty}$ We get:
+
+$$
+\int_0^{\ell_u^{\infty}} e^{-\theta_u} \left[ \int_0^{\infty} (1 - f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, \d \ell_u \right] \d\theta_u.
+$$
+
+#### Prefix Invariance Lemma
+
+For any $0 \leq \ell \leq \theta_u$,
+
+$$
+M_S^{(\theta_u)}(\ell) = M_S(\ell) \quad \Longleftrightarrow \quad \mu_S^{(\theta_u)}\upharpoonright [0,\ell] = \mu_S\upharpoonright [0,\ell].
+$$
+
+Proof scratch:
+
+1. **Copy-graph viewpoint.** In the [HZ20] paper's alternative view, fixing thresholds $\theta_u$ turns each offline vertex $u$ into $p^{-1}\theta_u$ copies $(u,0), (u,p), \ldots, (u,\theta_u - p)$. Each online vertex always matches a copy with the _smallest load_ (ties broken lexicographically). Changing $\theta_u$ just **adds/removes copies of $u$** at higher load levels in this auxiliary graph.
+
+2. **Prefix of the process does not change.** Compare the "background" world $(\infty, \theta_{-u})$ with the "$\theta_u$-world" $(\theta_u, \theta_{-u})$.
+   Up to any load level $\ell \leq \theta_u$, the set of available copies and their loads are identical in the two worlds, because any copies that differ appear only **above** level $\theta_u$.
+   Hence the greedy rule ("pick smallest-load copy, lexicographic tie-break") makes the _same_ choices in both worlds up through load $\ell$.
+   Formally, in the alternating-path argument used to compare two instances that differ by one extra copy of $u$ at a higher level, the paper notes that **before the first vertex $v^*$ that would touch that extra copy arrives, the matchings in the two graphs are identical**—this is exactly the needed prefix invariance.
+
+3. **Conclusion.** Therefore, the set (and total "mass" $p \cdot |\cdot|$) of vertices from $S$ that get matched while $u$'s load is $\leq \ell$ is the same in both worlds, giving $M_S^{(\theta_u)}(\ell) = M_S(\ell)$ and the equality of the measures on every interval $[0,\ell]$.
+
+(As a boundary case, if $\theta_u \geq \ell_u^{\infty}$ then the two worlds coincide for the _entire_ run, so the equality holds on $[0,\ell_u^{\infty}]$ outright.)
+
+Done.
+
+> In the [HZ20] paper, by using **Structural Lemma for Equal Probabilities**, we have:At most $p^{-1} (\ell_u^{\infty} - \theta_u)$ online vertices differ in being matched between the two worlds.
+
+#### Splitting $S$ into $S_1$ and $S_2$
+
+In the "$\theta = \infty$ background world", we decompose $S$ into:
+
+- $S_1$: those online vertices that are ultimately matched to $u$;
+- $S_2$: those online vertices that are ultimately matched to other offline vertices.
+
+When the threshold is reduced to $\theta_u$, only decisions related to contacts with $u$ will change, so the "affected flow" mainly comes from $S_1$.
+
+The alternating path "splits off" this portion of the flow and reroutes it to other offline vertices or to higher load levels.
+
+Meanwhile, $S_2$ remains _equivalent_ unchanged (possibly only with some vertices from $S_1$ replacing vertices from $S_2$ in their original positions, i.e., identities are swapped).
+
+This is precisely the origin of "at most loss of $p$ per $p$-layer", which accumulates to "at most loss of 1 per unit $\ell$".
+
+The corresponding formal tool is the alternating-path comparison in the paper together with the structural lemma that "at most 1 vertex crosses the threshold".
+
+---
+
+### Descending Density Lemma
+
+Fix $\theta_{-u}$.
+
+For any interval $(a, b] \subseteq (\theta_u, \ell_u^{\infty}]$, we have
+
+$$
+\left(\mu_S - \mu_S^{(\theta_u)}\right)\bigl((a, b]\bigr) \leq b - a.
+$$
+
+Equivalently (viewing this as a Lebesgue measure $\lambda((a,b])$),
+
+$$
+\left(\mu_S - \mu_S^{(\theta_u)}\right)^{+} \leq \lambda \quad \text{on } (\theta_u, \ell_u^{\infty}].
+$$
+
+If $p \to 0$ with bounded densities (Radon–Nikodym derivatives) $\varphi_S = \frac{d\mu_S}{d\ell}$, $\varphi_S^{(\theta_u)} = \frac{d\mu_S^{(\theta_u)}}{d\ell}$, then for almost every $\ell \in (\theta_u, \ell_u^{\infty}]$,
+
+$$
+0 \leq \varphi_S(\ell) - \varphi_S^{(\theta_u)}(\ell) \leq 1.
+$$
+
+**Proof Intuition** (discretize to each $p$-layer → alternating path → sum).
+
+This states that "$\varphi_S^{(\theta_u)}$ relative to $\varphi_S$ decreases at $\ell_u^{\infty} \geq \ell > \theta_u$, and the reduction is bounded by a constant 1—a strictly 'level-by-level' statement."
+
+Let the "background world" be $G(\infty, \theta_{-u})$ and the "$\theta_u$-world" be $G(\theta_u, \theta_{-u})$.
+
+Consider $\ell_t := tp$ where we think of $\ell$ decreasing from $\ell_u^{\infty}$ down to $\ell = \theta_u$.
+
+For each discrete layer level, define
+
+$$
+G_{t-1} = G(\ell_t, \theta_{-u}), \quad G_t = G(\ell_t - p, \theta_{-u}),
+$$
+
+which differs only by one copy $(u, \ell_t - p)$.
+
+Let the top vertex in the many copies that appear in $G_{t-1}$ be $v^*$.
+
+**Before $v^*$ arrives**, the matchings in the two graphs are completely identical; it is only after $v^*$ arrives that a certain alternating path is transmitted.
+
+For each layer-level interval $(\ell_t - p, \ell_t] \subseteq (\theta_u, \ell_u^{\infty}]$, before all decisions reach agreement up to $v^*$ arrives, this only affects at most one vertex in this layer-level interval being counted into "$S$-quality at this layer" or "load less than this layer's matching $S$-quality".
+
+Therefore,
+
+$$
+\left(\mu_S - \mu_S^{(\theta_u)}\right)\bigl((\ell_t - p, \ell_t]\bigr) \leq p.
+$$
+
+Cutting $(\theta_u, \ell]$ into $\frac{\ell - \theta_u}{p}$ such child intervals and summing, we obtain
+
+$$
+\left(\mu_S - \mu_S^{(\theta_u)}\right)\bigl((\theta_u, \ell]\bigr) \leq \ell - \theta_u, \quad \forall \ell \leq \ell_u^{\infty},
+$$
+
+which is the "measure version" above.
+
+Taking $p \to 0$ under absolute continuity substitution, we obtain the "density version" with pointwise upper bound $\varphi_S(\ell) - \varphi_S^{(\theta_u)}(\ell) \leq 1$ when $\ell \in (\theta_u, \ell_u^{\infty}]$.
