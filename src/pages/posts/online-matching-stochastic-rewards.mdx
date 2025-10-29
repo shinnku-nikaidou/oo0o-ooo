@@ -255,7 +255,7 @@ For some **non-decreasing function** $f: \mathbf{R}^{+} \mapsto \mathbf{R}^{+}$t
    (a) If $v$ is matched to $u \in U$, increase $\alpha_u$ by $p f\left(\ell_u\right)$ and let $\beta_v=p\left(1-f\left(\ell_u\right)\right)$.
    (b) If $v$ has no unsuccessful neighbor, let $\beta_v=0$.
 
-Let $F(\ell)=\int_0^{\ell} f(z) d z$ denote the integral of $f$. Note that we have $\alpha_u=F\left(\ell_u\right)$ in the limit as $p$ tends to zero.
+Let $F(\ell)=\int_0^{\ell} f(z) \d z$ denote the integral of $f$. Note that we have $\alpha_u=F\left(\ell_u\right)$ in the limit as $p$ tends to zero.
 
 **Contribution from $ \alpha_u $.**  
 We now proceed to prove approximate dual feasibility using the above characterization. First, consider the contribution from the offline vertex $u$.
@@ -265,7 +265,7 @@ _For any thresholds $\theta_{-u}$ of offline vertices other than $u$ and the cor
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
 \ge
-\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, f(\theta_u)\, d\theta_u \, .
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, f(\theta_u)\, \d\theta_u \, .
 $$
 
 By the above characterization, $u$'s load equals $ \ell_u^{\infty} $ when $ \theta_u \ge \ell_u^{\infty} $, and equals $ \theta_u $ when $ 0 \le \theta_u < \ell_u^{\infty} $. Further, recall that $ \alpha_u = F(\ell_u) $ and that $ \theta_u \sim \operatorname{Exp}(1) $. We get that:
@@ -273,11 +273,11 @@ By the above characterization, $u$'s load equals $ \ell_u^{\infty} $ when $ \the
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
 \ge
-\int_{0}^{\ell_u^{\infty}} e^{-\theta_u} F(\theta_u)\, d\theta_u
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u} F(\theta_u)\, \d\theta_u
 +
 e^{-\ell_u^{\infty}} F(\ell_u^{\infty})
 =
-\int_{0}^{\ell_u^{\infty}} e^{-\theta_u} f(\theta_u)\, d\theta_u \, .
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u} f(\theta_u)\, \d\theta_u \, .
 $$
 
 Here, the equality follows by integration by parts. $\square$
@@ -296,7 +296,7 @@ $$
 &\left(
 e^{-\ell_u^{\infty}}\, p_u(S)
 +
-\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, d\theta_u
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, \d\theta_u
 \right) \\
 &\times \big(1 - f(\ell_u^{\infty})\big)\, .
 \end{aligned}
@@ -317,7 +317,7 @@ Similarly, all vertices $ v \in S $, except for $ p^{-1}(\ell_u^{\infty}-\theta_
 This contributes:
 
 $$
-\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, d\theta_u \cdot \big(1 - f(\ell_u^{\infty})\big),
+\int_{0}^{\ell_u^{\infty}} e^{-\theta_u}\, \big( p_u(S) - (\ell_u^{\infty}-\theta_u)^{+} \big)\, \d\theta_u \cdot \big(1 - f(\ell_u^{\infty})\big),
 $$
 
 to the expectation. $\square$
@@ -325,13 +325,13 @@ to the expectation. $\square$
 So we have:
 
 $$
-\mathbf{E}\left[\alpha_u+\sum_{v \in S} \beta_v\right] \geq \int_0^{\ell_u^{\infty}} e^{-\theta_u} f\left(\theta_u\right) d \theta_u+\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)^{+} d \theta_u\right)\left(1-\mathscr{f}\left(\ell_u^{\infty}\right)\right)
+\mathbf{E}\left[\alpha_u+\sum_{v \in S} \beta_v\right] \geq \int_0^{\ell_u^{\infty}} e^{-\theta_u} f\left(\theta_u\right) \d \theta_u+\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)^{+} \d \theta_u\right)\left(1-\mathscr{f}\left(\ell_u^{\infty}\right)\right)
 $$
 
 To show approximate dual feasibility, it suffices to find a non-decreasing function $f$ such that for any $\ell_u^{\infty} \geq 0$ and any $0 \leq p_u(S) \leq 1$ :
 
 $$
-\int_0^{\ell_u^{\infty}} e^{-\theta_u} f\left(\theta_u\right) d \theta_u+\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)^{+} d \theta_u\right)\left(1-f\left(\ell_u^{\infty}\right)\right) \geq \Gamma \cdot p_u(S)
+\int_0^{\ell_u^{\infty}} e^{-\theta_u} f\left(\theta_u\right) \d \theta_u+\left(e^{-\ell_u^{\infty}} p_u(S)+\int_0^{\ell_u^{\infty}} e^{-\theta_u}\left(p_u(S)-\left(\ell_u^{\infty}-\theta_u\right)\right)^{+} \d \theta_u\right)\left(1-f\left(\ell_u^{\infty}\right)\right) \geq \Gamma \cdot p_u(S)
 $$
 
 Therefore, there is at most one index $j$ such that $\ell_j<\ell_u^{\infty}$ and $\ell_{j+1} \geq \ell_u^{\infty}$.
@@ -341,7 +341,7 @@ Therefore, there is at most one index $j$ such that $\ell_j<\ell_u^{\infty}$ and
 For ease of notations, we write $\ell_u^{\infty}$ as $\ell$, $p_u(S)$ as $p$, and $\theta_u$ as $\theta$. The dual feasibility inequality becomes:
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+\left(e^{-\ell} p+\int_0^{\ell} e^{-\theta}(p-(\ell-\theta))^{+} d \theta\right)(1-f(\ell)) \geq \Gamma \cdot p .
+\int_0^{\ell} e^{-\theta} f(\theta) \d \theta+\left(e^{-\ell} p+\int_0^{\ell} e^{-\theta}(p-(\ell-\theta))^{+} \d \theta\right)(1-f(\ell)) \geq \Gamma \cdot p .
 $$
 
 First, note that the $z^{+}$ operation effectively restricts the second integration in the above equation to be from $\max \{0, \ell-p\}$ to $\ell$. This allows us to simplify by splitting into two cases.
@@ -349,13 +349,13 @@ First, note that the $z^{+}$ operation effectively restricts the second integrat
 **Case 1:** When $0 \leq p < \ell$, we need:
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+p}-e^{-\ell}\right) \geq \Gamma \cdot p \tag{Case-I}
+\int_0^{\ell} e^{-\theta} f(\theta) \d \theta+(1-f(\ell))\left(e^{-\ell+p}-e^{-\ell}\right) \geq \Gamma \cdot p \tag{Case-I}
 $$
 
 **Case 2:** When $0 \leq \ell \leq p$, we need:
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(1-\ell+p-e^{-\ell}\right) \geq \Gamma \cdot p \tag{Case-II}
+\int_0^{\ell} e^{-\theta} f(\theta) \d \theta+(1-f(\ell))\left(1-\ell+p-e^{-\ell}\right) \geq \Gamma \cdot p \tag{Case-II}
 $$
 
 Then, we show that the worst-case scenario occurs when there is a unit mass of online neighbors, i.e., when $p = 1$.
@@ -371,13 +371,13 @@ So the lemma follows. Hence it suffices to solve the following simplified differ
 For any $\ell>1$, we need (**Case-I** with $p=1$):
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+1}-e^{-\ell}\right) \geq \Gamma \tag{$\ell > 1$}
+\int_0^{\ell} e^{-\theta} f(\theta) \d \theta+(1-f(\ell))\left(e^{-\ell+1}-e^{-\ell}\right) \geq \Gamma \tag{$\ell > 1$}
 $$
 
 while for any $0 \leq \ell \leq 1$, we need (**Case-II** with $p=1$):
 
 $$
-\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(2-\ell-e^{-\ell}\right) \geq \Gamma \tag{$\ell \leq 1$}
+\int_0^{\ell} e^{-\theta} f(\theta) \d \theta+(1-f(\ell))\left(2-\ell-e^{-\ell}\right) \geq \Gamma \tag{$\ell \leq 1$}
 $$
 
 **Right Boundary Condition.** To further simplify, we impose a right boundary condition that it suffices to ensure that $f(\ell)=1-\frac{1}{e}$ for $\ell \geq 1$.
@@ -388,8 +388,8 @@ _Proof._ By the assumption of $f$, it suffices to show that the difference betwe
 
 $$
 \begin{aligned}
-& \left(\int_0^{\ell} e^{-\theta} f(\theta) d \theta+(1-f(\ell))\left(e^{-\ell+1}-e^{-\ell}\right)\right)-\left(\int_0^1 e^{-\theta} f(\theta) d \theta+(1-f(1))\left(1-e^{-1}\right)\right) \\
-& \quad=\int_1^{\ell} e^{-\theta} f(1) d \theta+(1-f(1))\left(\left(e^{-\ell+1}-e^{-\ell}\right)-\left(1-e^{-1}\right)\right) \\
+& \left(\int_0^{\ell} e^{-\theta} f(\theta) \d \theta+(1-f(\ell))\left(e^{-\ell+1}-e^{-\ell}\right)\right)-\left(\int_0^1 e^{-\theta} f(\theta) \d \theta+(1-f(1))\left(1-e^{-1}\right)\right) \\
+& \quad=\int_1^{\ell} e^{-\theta} f(1) \d \theta+(1-f(1))\left(\left(e^{-\ell+1}-e^{-\ell}\right)-\left(1-e^{-1}\right)\right) \\
 & \quad=\left(1-e^{-\ell+1}\right)\left(f(1)-\left(1-e^{-1}\right)\right) \\
 & \quad=0
 \end{aligned}
@@ -398,10 +398,10 @@ $$
 As a result, it suffices to find a non-decreasing function $f$ subject to the boundary conditions $f(0)=1-\Gamma$ and $f(1)=1-1 / e$, such that the inequality for $\ell \leq 1$ holds for any $0 \leq \ell \leq 1$. Solving this differential inequality for $f$ gives,
 
 $$
-f(x)=\frac{1}{h(x)}\left(1-\frac{1}{e}+\int_x^1\left(1-e^{-y}\right) g(y) h(y) d y\right)
+f(x)=\frac{1}{h(x)}\left(1-\frac{1}{e}+\int_x^1\left(1-e^{-y}\right) g(y) h(y) \d y\right)
 $$
 
-where $g(x)=\frac{1}{2-x-e^{-x}}$, and $h(x)=\exp \left(\int_x^1 g(z) d z\right)$.
+where $g(x)=\frac{1}{2-x-e^{-x}}$, and $h(x)=\exp \left(\int_x^1 g(z) \d z\right)$.
 To conclude, we obtain the function $f(x)$ described above. Thus $\Gamma=1-f(0) \approx 0.576$. $\square$
 
 ---
@@ -744,9 +744,9 @@ Aggregating these infinitesimal updates over the entire process, the total incre
 $$
 \mathbb{E}_{\theta_u}\!\left[\alpha_u \mid \theta_{-u}\right]
 =
-\int_{0}^{\ell_u^{\infty}} P[ \theta_u > \ell_u] f(\ell_u)\, d\ell_u
+\int_{0}^{\ell_u^{\infty}} P[ \theta_u > \ell_u] f(\ell_u)\, \d\ell_u
 =
-\int_{0}^{\ell_u^{\infty}} e^{-\ell_u}\, f(\ell_u)\, d\ell_u \, .
+\int_{0}^{\ell_u^{\infty}} e^{-\ell_u}\, f(\ell_u)\, \d\ell_u \, .
 $$
 
 > It's not an inequation but an equality.
@@ -792,9 +792,9 @@ When the probabilities are vanishing, $\mu_S$ is absolutely continuous with resp
 $$
 \varphi_S(\ell) := \frac{d\mu_S}{d\ell} (\ell),
 \quad
-M_S(\ell) = \int_0^{\ell} \varphi_S(z)\, dz,
+M_S(\ell) = \int_0^{\ell} \varphi_S(z)\, \d z,
 \quad
-\int_0^{\ell_u^{\infty}} \varphi_S(z)\, dz = p \cdot R.
+\int_0^{\ell_u^{\infty}} \varphi_S(z)\, \d z = p \cdot R.
 $$
 
 Note that $M_S(\ell^\infty) \geq p_u(S)$ (because $p_u(S) = \min\{\sum_{v \in S} p, 1\}$, and in the "background world" where $u$ is always available, $M_S(\ell^\infty) = p \cdot |S| \geq p_u(S)$).
@@ -818,8 +818,8 @@ All online vertices $v \in S$ are matched to neighbors, so the total contributio
 $$
 \begin{aligned}
 A &= P[\theta_u \geq \ell_u^{\infty}] \cdot \sum_{v \in S} \beta_v \\
-&= e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_v) \right) d\mu_S(\theta_u) \\
-&\geq e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_u) \right) \cdot \varphi_S(\ell_u)\, d\ell_u
+&= e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_v) \right) \d\mu_S(\theta_u) \\
+&\geq e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_u) \right) \cdot \varphi_S(\ell_u)\, \d\ell_u
 \end{aligned}
 $$
 
@@ -828,7 +828,7 @@ $$
 $$
 \begin{aligned}
 & e^{-\ell_u^{\infty}} \cdot \int_0^{\ell_u^{\infty}} \left( 1 - f(\ell_u) \right) \cdot \varphi_S(\ell_u)\, \d\ell_u \\
-\geq & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot \int_0^{\ell_u^{\infty}}\varphi_S(\ell_u)\, d\ell_u \\
+\geq & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot \int_0^{\ell_u^{\infty}}\varphi_S(\ell_u)\, \d\ell_u \\
 = & e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot M_S(\ell_u^{\infty})
 \geq e^{-\ell_u^{\infty}} \cdot \left( 1 - f(\ell_u^{\infty}) \right) \cdot p_u(S)
 \end{aligned}
@@ -861,7 +861,7 @@ $$
 \begin{aligned}
 \mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right]
 &= \mathbb{E}_{\theta_u}[F(\theta_u) \mid \theta_{-u}] \\
-&= \int_0^{\infty} e^{-\theta_u} F(\theta_u)\, d \theta_u
+&= \int_0^{\infty} e^{-\theta_u} F(\theta_u)\, \d \theta_u
 \end{aligned}
 $$
 
@@ -869,8 +869,8 @@ where
 
 $$
 \begin{aligned}
-F(\theta_u) &:= \int_0^{\infty} (1 - f(\ell_v))\, d \mu_S^{(\theta_u)}(z) \\
-&\geq \int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, d \ell_u
+F(\theta_u) &:= \int_0^{\infty} (1 - f(\ell_v))\, \d \mu_S^{(\theta_u)}(z) \\
+&\geq \int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, \d \ell_u
 \end{aligned}
 $$
 
@@ -879,7 +879,7 @@ Therefore,
 $$
 \mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right]
 \geq
-\int_0^{\infty} e^{-\theta_u}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, d \ell_u\right] d \theta_u
+\int_0^{\infty} e^{-\theta_u}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta_u)}(\ell_u)\, \d \ell_u\right] \d \theta_u
 $$
 
 1. When $\theta_u \geq \ell_u^{\infty}$.
@@ -889,6 +889,6 @@ It's the same world as before ($\theta_u = \infty$), so that $\mu_S^{(\theta_u)}
 Hence,
 
 $$
-\int_{\ell_u^{\infty}}^{\infty} e^{-\theta}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta)}(\ell_u)\, d\ell_u\right] d\theta
-= e^{-\ell_u^{\infty}} \int_0^{\ell_u^{\infty}} (1-f(\ell_u)) \varphi_S(\ell_u)\, d\ell_u
+\int_{\ell_u^{\infty}}^{\infty} e^{-\theta}\left[\int_0^{\infty}(1-f(\ell_u)) \varphi_S^{(\theta)}(\ell_u)\, \d\ell_u\right] \d\theta
+= e^{-\ell_u^{\infty}} \int_0^{\ell_u^{\infty}} (1-f(\ell_u)) \varphi_S(\ell_u)\, \d\ell_u
 $$
