@@ -1210,10 +1210,162 @@ $$
 \end{aligned}
 $$
 
-###
+The $\alpha$-side is an equality:
 
+$$
+\mathbb{E}\left[\alpha_u \mid \theta_{-u}\right]=\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell
+$$
 
-#### Code for solving for the best function f via LP
+Hence
+
+$$
+\begin{aligned}
+\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right] & =\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell+\int_a^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell+\sigma\left(1-f\left(\ell_u^{\infty}\right)\right) \\
+& =\int_0^a e^{-\ell} f(\ell) d \ell+\underbrace{\int_a^{\ell_u^{\infty}} e^{-\ell} d \ell}_{=e^{-a}-e^{-\ell_u^{\infty}}}+\left(1-\left(\ell_u^{\infty}-a\right)\right)\left(1-f\left(\ell_u^{\infty}\right)\right)
+\end{aligned}
+$$
+
+That is,
+
+$$
+\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right]=\int_0^a e^{-\ell} f(\ell) d \ell+e^{-a}-e^{-\ell_u^{\infty}}+\left(1-\left(\ell_u^{\infty}-a\right)\right)\left(1-f\left(\ell_u^{\infty}\right)\right)
+$$
+
+### Proposition
+
+Fix $\ell_u^{\infty}>0$ and the thresholds $\theta_{-u}$. Let $f:[0, \infty) \rightarrow[0,1]$ be nondecreasing, and set $g(\ell):= e^{-\ell}(1-f(\ell))$, which is nonincreasing on $\left[0, \ell_u^{\infty}\right]$.
+Let $\mu_S$ be any feasible cumulative measure on $\left(0, \ell_u^{\infty}\right]$ with total mass
+
+$$
+M_S\left(\ell_u^{\infty}\right)=\mu_S\left(\left(0, \ell_u^{\infty}\right]\right)=1
+$$
+
+and write its Radon-Nikodym decomposition $\mu_S=\mu_{\mathrm{ac}}+\mu_{\text {sing }}$ with density $\phi=\frac{d \mu_{\mathrm{ac}}}{d \ell} \in[0,1]$ a.e. on $\left(0, \ell_u^{\infty}\right]$.
+
+> This is equivalent to using $y=1$ to horizontally cut $\mu_S$: the upper part is $\mu_{\text{sing}}$, and the lower part is $\mu_{\mathrm{ac}}$.
+
+Denote $L:=\mu_{\mathrm{ac}}\left(\left(0, \ell_u^{\infty}\right]\right)=\int_0^{\ell_u^{\infty}} \phi(\ell) d \ell \in[0,1]$.
+
+Then the expected $\beta$-contribution satisfies
+
+$$
+\mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] \geq \underbrace{\int_{\ell_u^{\infty}-L}^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell}_{\text {continuous block }}+\underbrace{(1-L)\left(1-f\left(\ell_u^{\infty}\right)\right)}_{\text {terminal atom }} .
+$$
+
+> hint: equality is attained by the following Example 3 shape:
+
+$$
+\mu_S^{\star}=\lambda \upharpoonright\left(\ell_u^{\infty}-L, \ell_u^{\infty}\right)+(1-L) \delta_{\ell=\ell_u^{\infty}} \quad
+$$
+
+(unit density on the rightmost length- $L$ interval plus an atom of size $1-L$
+
+Since
+
+$$
+\mathbb{E}_{\theta_u}\left[\alpha_u \mid \theta_{-u}\right]=\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell
+$$
+
+does not depend on $\mu_S$, the same lower bound (with the same extremizer) holds for the total expectation $\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right]$.
+
+#### Proof
+
+( $\left.0, \ell_u^{\infty}\right]$. Decompose $\mu_S=\mu_{\mathrm{ac}}+\mu_{\text {sing }}$ and set
+
+$$
+L:=\mu_{\mathrm{ac}}\left(\left(0, \ell_u^{\infty}\right]\right) \in[0,1], \quad \sigma:=\mu_{\operatorname{sing}}\left(\left(0, \ell_u^{\infty}\right]\right)=1-L .
+$$
+
+Step 2 (Lower bound as "continuous + singular" parts).
+Using the phantom-time indexing and the standard truncation construction of $\mu_S^{(\theta)}$, one obtains the following lower bound (which will be tight for our extremal shapes):
+
+$$
+\mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] \geq \underbrace{\int_0^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) \phi(\ell) d \ell}_{\text {from } \mu_{\mathrm{ac}}}+\underbrace{\sum_{x \in\left(0, \ell_u^{\infty}\right]} \mu_{\text {sing }}\{x\}(1-f(x))}_{\text {from } \mu_{\text {sing }}} .
+$$
+
+Heuristically: each continuous sliver at level $\ell$ survives when $\theta_u \geq \ell$, contributing a factor $e^{-\ell}$; whereas atoms cannot be shaved off by truncation (otherwise we would create a singular positive difference), hence every atom contributes $(1-f(\cdot))$ without an extra $e^{-\ell}$ factor after averaging in $\theta$.
+
+Step 3 (Rearranging the continuous part to the right).
+We must minimize $\int g(\ell) \phi(\ell) d \ell$ subject to $\phi \in[0,1]$ a.e. and $\int \phi=L$, where $g(\ell)=e^{-\ell}(1-f(\ell))$ is nonincreasing. A standard Hardy-Littlewood exchange shows that moving any positive mass of $\phi$ from a smaller $\ell$ to a larger $\ell$ does not increase the integral. Iterating these exchanges yields the extremal density
+
+$$
+\phi^{\star}(\ell)=\mathbf{1}_{\left(\ell_u^{\infty}-L, \ell_u^{\infty}\right]}(\ell)
+$$
+
+whence the minimal continuous contribution is
+
+$$
+\int_{\ell_u^{\infty}-L}^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell
+$$
+
+Step 4 (Placing the singular mass).
+The singular contribution is $\sum \mu_{\text {sing }}\{x\}(1-f(x))$. Because $1-f$ is nonincreasing, this is minimized by concentrating all singular mass at the right endpoint:
+
+$$
+\sum_x \mu_{\text {sing }}\{x\}(1-f(x)) \geq \sigma\left(1-f\left(\ell_u^{\infty}\right)\right) \quad \text { with equality by taking } \mu_{\text {sing }}=\sigma \delta_{\ell=\ell_u^{\infty}} \text {. }
+$$
+
+Step 5 (Combine and attainability).
+Combining Steps 3-4 yields
+
+$$
+\mathbb{E}_{\theta_u}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] \geq \int_{\ell_u^{\infty}-L}^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell+(1-L)\left(1-f\left(\ell_u^{\infty}\right)\right)
+$$
+
+with equality attained by the Example 3 shape
+
+$$
+\mu_S^{\star}=\lambda \upharpoonright\left(\ell_u^{\infty}-L, \ell_u^{\infty}\right)+(1-L) \delta_{\ell=\ell_u^{\infty}} .
+$$
+
+Since $\mathbb{E}\left[\alpha_u \mid \theta_{-u}\right]=\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell$ is independent of $\mu_S$, the same extremizer minimizes the total $\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right]$.
+
+---
+
+### Solving for the best function f via LP
+
+Let the length of the continuous segment be denoted as
+
+$$
+b:=L=\ell_u^{\infty}-a, \quad 0 \leq b \leq 1, a>0, \ell_u^{\infty}=a+b .
+$$
+
+Under the setting of "Example 3" (continuous segment density is 1, with atomic mass $1-b$ at the endpoint $\ell_u^{\infty}$),
+
+$$
+\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right]=\int_0^a e^{-\ell} f(\ell) d \ell+e^{-a}\left(1-e^{-b}\right)+(1-b)(1-f(a+b))
+$$
+
+with $\ell_u^{\infty}=a+b$ .
+
+I wrote a piece of code using LP, where I assume the "tail is fixed" to
+
+$$
+f(\ell)=1-\frac{1}{e} \quad(\ell \geq 1)
+$$
+
+to perform optimization.
+
+Results:
+
+- Grid used: $\ell \in[0,2]$ with $N=1001$ points; $(a, b) \in[0,1]^2$ each taking 201 points.
+- Solution obtained:
+
+$$
+\Gamma^{\star} \approx 0.5804535653
+$$
+
+- Using vectorized grid to verify $\min_{a, b} L\left[f^{\star}\right](a, b)$ again, we get:
+
+$$
+\min L\left[f^{\star}\right] \approx 0.5804533557
+$$
+
+This matches the LP result to the order of $2 \times 10^{-7}$.
+
+- Worst point (on the test grid): $a \approx 0.005, b \approx 0.005$ (close to the origin, indicating that after fixing the tail, the $\min$ value occurs at the origin).
+
+We use python to solve, the code is down below
 
 ```python
 """
