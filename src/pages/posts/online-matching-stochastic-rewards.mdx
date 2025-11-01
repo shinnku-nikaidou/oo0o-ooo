@@ -859,7 +859,7 @@ $$
 \varphi_S^{(\theta_u)} = \frac{\d\mu_S^{(\theta_u)}}{\d\ell}
 $$
 
-> Instead of "when does $u$ succeed in the real world," we use "when does $u$ succeed in the phantom world at the corresponding arrival," 
+> Instead of "when does $u$ succeed in the real world," we use "when does $u$ succeed in the phantom world at the corresponding arrival,"
 > which gives each arrival a corresponding "phantom sequence degree" $C(\tau)$.
 > $M_S(\theta) = M_S^{(\theta_u)}(\theta)$ when $\theta_u \geq \ell_u^{\infty}$.
 
@@ -1049,3 +1049,72 @@ $$
 $$
 
 > This is EXACTLY the same as the [HZ20] paper's beta's RHS scaling.
+
+---
+
+### Three examples for building intuition
+
+We first suppose $p_u(S) = 1, R = |S| = 1/p$ for simplicity.
+
+#### Example 1:
+
+In phantom world, all of $S$ 's mass into the last unit of load on $u$.
+
+In Real ( $\theta$-) world: By prefix invariance, up to load $\ell \leq \theta$ the evolution matches the phantom world.
+To obtain the most _pessimistic_ real-world mass profile for $\sum \beta$, we simply delete all mass above $\theta$.
+
+This yields the following densities.
+
+Definitions:
+
+$$
+\varphi_S(\ell)= \begin{cases}1, & \ell_u^{\infty}-1<\ell \leq \ell_u^{\infty} \\ 0, & \text { otherwise }\end{cases}
+$$
+
+and, for each $\theta \geq 0$,
+
+$$
+\varphi_S^{(\theta)}(\ell)= \begin{cases}1, & \ell_u^{\infty}-1<\ell \leq \min \left\{\theta, \ell_u^{\infty}\right\} \\ 0, & \text { otherwise }\end{cases}
+$$
+
+> If $\theta \leq \ell_u^{\infty}-1$, then $\varphi_S^{(\theta)} \equiv 0$.
+
+Recall
+
+$$
+\sum_{v \in S} \beta_v \quad \rightsquigarrow \quad F(\theta):=\int_0^{\infty}(1-f(\ell)) \varphi_S^{(\theta)}(\ell) d \ell
+$$
+
+With the above $\varphi_S^{(\theta)}$,
+
+$$
+F(\theta)=\int_{\ell=\ell_u^{\infty}-1}^{\min \left\{\theta, \ell_u^{\infty}\right\}}(1-f(\ell)) d \ell
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\mathbb{E}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] & =\int_0^{\infty} e^{-\theta} F(\theta) d \theta \\
+& =\int_0^{\infty} e^{-\theta}\left(\int_{\ell=\ell_u^{\infty}-1}^{\min \left\{\theta, \ell_u^{\infty}\right\}}(1-f(\ell)) d \ell\right) d \theta \\
+& =\int_{\ell=\ell_u^{\infty}-1}^{\ell_u^{\infty}}(1-f(\ell))\left(\int_{\theta=\ell}^{\infty} e^{-\theta} d \theta\right) d \ell \\
+& =\int_{\ell_u^{\infty}-1}^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell
+\end{aligned}
+$$
+
+The $\alpha$-side is an equality:
+
+$$
+\mathbb{E}\left[\alpha_u \mid \theta_{-u}\right]=\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell
+$$
+
+Hence
+
+$$
+\begin{aligned}
+\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right] & =\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell+\int_{\ell_u^{\infty}-1}^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell \\
+& =\int_0^{\ell_u^{\infty}-1} e^{-\ell} f(\ell) d \ell+\int_{\ell_u^{\infty}-1}^{\ell_u^{\infty}} e^{-\ell} d \ell \\
+& =\int_0^{\ell_u^{\infty}-1} e^{-\ell} f(\ell) d \ell+e^{-\left(\ell_u^{\infty}-1\right)}-e^{-\ell_u^{\infty}} \\
+& =e^{-\ell_u^{\infty}}(e-1)+\int_0^{\ell_u^{\infty}-1} e^{-\ell} f(\ell) d \ell
+\end{aligned}
+$$
