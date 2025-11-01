@@ -1118,3 +1118,464 @@ $$
 & =e^{-\ell_u^{\infty}}(e-1)+\int_0^{\ell_u^{\infty}-1} e^{-\ell} f(\ell) d \ell
 \end{aligned}
 $$
+
+#### Example 2:
+
+In the phantom world, all of $S$ 's mass **collapses to** a single load instant at $\ell_u^{\infty}$ on $u$ (a **Dirac** mass at $\ell= \ell_u^{\infty}$ ).
+
+In the real ( $\theta$-) world: By prefix invariance, the same atom appears in the real-world profile at $\ell=\ell_u^{\infty}$ for every $\theta$.
+
+Formally, instead of a bounded density, we work directly with the (singular) measure:
+
+$$
+\mu_S=\delta_{\ell=\ell_u^{\infty}} .
+$$
+
+For each $\theta$, the corresponding real-world measure is still $\mu_S^{(\theta)}=\delta_{\ell=\ell_u^{\infty}}$.
+Recall
+
+$$
+\sum_{v \in S} \beta_v \quad \leadsto \quad F(\theta):=\int_0^{\infty}(1-f(\ell)) d \mu_S^{(\theta)}(\ell)
+$$
+
+With the above $\mu_S^{(\theta)}$,
+
+$$
+F(\theta)=\left(1-f\left(\ell_u^{\infty}\right)\right) \quad(\text { a constant in } \theta) .
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\mathbb{E}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] & =\int_0^{\infty} e^{-\theta} F(\theta) d \theta \\
+& =\left(1-f\left(\ell_u^{\infty}\right)\right) \int_0^{\infty} e^{-\theta} d \theta \\
+& =1-f\left(\ell_u^{\infty}\right)
+\end{aligned}
+$$
+
+The $\alpha$-side is an equality:
+
+$$
+\mathbb{E}\left[\alpha_u \mid \theta_{-u}\right]=\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell
+$$
+
+Hence
+
+$$
+\mathbb{E}\left[\alpha_u+\sum_{v \in S} \beta_v \mid \theta_{-u}\right]=\int_0^{\ell_u^{\infty}} e^{-\ell} f(\ell) d \ell+\left(1-f\left(\ell_u^{\infty}\right)\right)
+$$
+
+#### Example 3: The combination of example 1 and 2
+
+In the phantom world, $S$ 's mass splits into:
+
+- a continuous block of unit density on the interval ( $a, \ell_u^{\infty}$ ), and
+- an atomic mass at $\ell=\ell_u^{\infty}$ of size $\sigma:=1-\left(\ell_u^{\infty}-a\right)$.
+  (Feasibility: $0 \leq \ell_u^{\infty}-a \leq 1$ so that $\sigma \in[0,1]$.)
+  In the real ( $\theta$-) world: by prefix invariance, up to load $\ell \leq \theta$ the evolution agrees with the phantom world; to obtain the most pessimistic real-world profile for $\sum \beta$, we truncate the continuous block above $\theta$, while the atom at $\ell_u^{\infty}$ is preserved for every $\theta$ (no-atom-loss).
+
+Measure-level definitions. Let
+
+$$
+\mu_S=\underbrace{\lambda \upharpoonright\left(a, \ell_u^{\infty}\right)}_{\text {unit density on }\left(a, \ell_u^{\infty}\right)}+\underbrace{\sigma \delta_{\ell=\ell_u^{\infty}}}_{\text {atom at } \ell_u^{\infty}}, \quad \sigma=1-\left(\ell_u^{\infty}-a\right) .
+$$
+
+For each $\theta \geq 0$, define the pessimistic real-world measure
+
+$$
+\mu_S^{(\theta)}:=\lambda \upharpoonright\left(a, \min \left\{\theta, \ell_u^{\infty}\right\}\right)+\sigma \delta_{\ell=\ell_u^{\infty}} .
+$$
+
+Recall
+
+$$
+\sum_{v \in S} \beta_v \leadsto F(\theta):=\int_0^{\infty}(1-f(\ell)) d \mu_S^{(\theta)}(\ell)
+$$
+
+With the above $\mu_S^{(\theta)}$,
+
+$$
+F(\theta)=\int_a^{\min \left\{\theta, \ell_u^{\infty}\right\}}(1-f(\ell)) d \ell+\sigma\left(1-f\left(\ell_u^{\infty}\right)\right)
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\mathbb{E}\left[\sum_{v \in S} \beta_v \mid \theta_{-u}\right] & =\int_0^{\infty} e^{-\theta} F(\theta) d \theta \\
+& =\int_0^{\infty} e^{-\theta}\left(\int_a^{\min \left\{\theta, \ell_u^{\infty}\right\}}(1-f(\ell)) d \ell\right) d \theta+\sigma\left(1-f\left(\ell_u^{\infty}\right)\right) \int_0^{\infty} e^{-\theta} d \theta \\
+& =\int_a^{\ell_u^{\infty}}(1-f(\ell))\left(\int_{\theta=\ell}^{\infty} e^{-\theta} d \theta\right) d \ell+\sigma\left(1-f\left(\ell_u^{\infty}\right)\right) \\
+& =\int_a^{\ell_u^{\infty}} e^{-\ell}(1-f(\ell)) d \ell+\sigma\left(1-f\left(\ell_u^{\infty}\right)\right)
+\end{aligned}
+$$
+
+###
+
+
+#### Code for solving for the best function f via LP
+
+```python
+"""
+Method 1 (LP discretization) for the inequality:
+  Phi_f(ell, p) = ∫_0^ell e^{-θ} f(θ) dθ + e^{-ell} p (1 - f(ell)) + ∫_0^ell e^{-θ} (p - (ell - θ))_+ (1 - f(θ)) dθ
+subject to  Phi_f(ell, p) >= Gamma * p  for all ell in [0, L], p in [0, 1].
+
+We discretize f as piecewise-constant over m intervals on [0, L], enforce constraints
+on a finite set of (ell_j, p_k) pairs, add monotonicity (f_{i+1} >= f_i) and bounds (0<=f_i<=1),
+and maximize Gamma via a linear program.
+
+Dependencies: numpy, scipy (for linprog).
+
+Author: ChatGPT (Method 1 LP)
+"""
+
+from dataclasses import dataclass
+import argparse
+import numpy as np
+from typing import Tuple, List, Dict, Any
+from scipy.optimize import linprog
+
+
+@dataclass
+class LPConfig:
+    L: float = 3.0  # Upper bound of ell
+    m: int = 120  # Number of intervals for f on [0, L]
+    solver_method: str = "highs"  # linprog method
+    verbose: bool = True  # Print summary
+    p_grid_size: int = 9  # Uniform p-grid resolution (including endpoints)
+
+
+@dataclass
+class LPSolution:
+    success: bool
+    message: str
+    Gamma: float
+    f: np.ndarray  # shape (m,)
+    grid_ell: np.ndarray  # ell_j grid (right endpoints)
+    config: LPConfig
+    min_slack: float
+    worst_pair: Tuple[float, float]
+
+
+def _intervals(L: float, m: int) -> np.ndarray:
+    """Return grid boundaries t[0..m], t[0]=0, t[m]=L"""
+    return np.linspace(0.0, L, m + 1)
+
+
+def _ell_points_from_grid(t: np.ndarray) -> np.ndarray:
+    """Use right endpoints as ell_j: ell_j = t[j], j=1..m"""
+    return t[1:]
+
+
+def _int_exp(a: float, b: float) -> float:
+    """∫_a^b e^{-θ} dθ = e^{-a} - e^{-b}"""
+    if b <= a:
+        return 0.0
+    return np.exp(-a) - np.exp(-b)
+
+
+def _int_exp_theta_minus_l(a: float, b: float, ell: float) -> float:
+    """
+    ∫_a^b e^{-θ} (θ - ell) dθ = [ (ell - θ - 1) e^{-θ} ]_a^b
+    """
+    if b <= a:
+        return 0.0
+    term_b = (ell - b - 1.0) * np.exp(-b)
+    term_a = (ell - a - 1.0) * np.exp(-a)
+    return term_b - term_a
+
+
+def _int_exp_linear_piece(a: float, b: float, p: float, ell: float) -> float:
+    """
+    ∫_a^b e^{-θ} (p - (ell - θ)) dθ = p ∫ e^{-θ} + ∫ e^{-θ} (θ - ell)
+                                    = p * (e^{-a} - e^{-b}) + [ (ell - θ - 1) e^{-θ} ]_a^b
+    """
+    if b <= a:
+        return 0.0
+    return p * _int_exp(a, b) + _int_exp_theta_minus_l(a, b, ell)
+
+
+def build_lp_matrices(config: LPConfig) -> Dict[str, Any]:
+    """
+    Build LP matrices for variables x = [f_1..f_m, Gamma].
+    Constraints:
+      1) For each (ell_j, p_k) in selected pairs: Phi_f(ell_j, p_k) - Gamma * p_k >= 0
+         -> Convert to A_ub x <= b_ub by multiplying -1.
+      2) Monotonicity: f_{i+1} - f_i >= 0  ->  -f_{i+1} + f_i <= 0.
+      3) Bounds: 0 <= f_i <= 1,  0 <= Gamma <= 1 (safe upper bound).
+    """
+    L, m = config.L, config.m
+    t = _intervals(L, m)  # boundaries
+    ell_pts = _ell_points_from_grid(t)  # j=1..m
+    var_count = m + 1  # f_1..f_m, Gamma
+    gamma_idx = m
+
+    # Monotonic piecewise-constant: f_i is value on interval (t[i-1], t[i]]; we'll treat f(ell_j)=f_j.
+    # Precompute weights for A-term: wA[j, i] = ∫_{interval_i ∩ [0, ell_j]} e^{-θ} dθ
+    wA = np.zeros((m, m))
+    for j, ell in enumerate(ell_pts):
+        for i in range(m):
+            a = t[i]
+            b = t[i + 1]
+            lo = a
+            hi = min(b, ell)
+            if hi > lo:
+                wA[j, i] = _int_exp(lo, hi)
+
+    # Helper to build a single (j, p) inequality row
+    def build_constraint_row(j: int, p: float) -> Tuple[np.ndarray, float]:
+        """
+        Build row for: Phi_f(ell_j, p) - Gamma * p >= 0.
+        Return (row, rhs) to be used in A_ub x <= b_ub after multiplying by -1.
+        """
+        ell = ell_pts[j]
+        row = np.zeros(var_count)
+        const = 0.0
+
+        # A-term: sum_i wA[j,i] f_i
+        row[:m] += wA[j, :]
+
+        # B-term: e^{-ell} p (1 - f(ell)) = e^{-ell} p - e^{-ell} p f_j
+        const += np.exp(-ell) * p
+        row[j] += -np.exp(-ell) * p  # subtract on f_j
+
+        # C-term: ∫_0^ell e^{-θ} (p - (ell - θ))_+ (1 - f(θ)) dθ
+        # Compute interval by interval over [max(0, ell - p), ell].
+        for i in range(m):
+            a = t[i]
+            b = t[i + 1]
+            lo = max(a, max(0.0, ell - p))
+            hi = min(b, ell)
+            if hi <= lo:
+                continue
+            I = _int_exp_linear_piece(lo, hi, p, ell)
+            const += I
+            row[
+                i
+            ] += -I  # because it's (1 - f_i) * I  => contributes -I * f_i + constant I
+
+        # Now we have: sum(row[:-1]*f) + const - p*Gamma >= 0
+        # Move -p*Gamma into row:
+        row[gamma_idx] += -p
+
+        # Convert to A_ub x <= b_ub: Row*x >= -const  <=>  (-Row)*x <= const
+        return -row, const
+
+    # Collect (ell_j, p_k) pairs
+    pairs: List[Tuple[int, float]] = []
+    for j, ell in enumerate(ell_pts):
+        p_list = []
+        if config.p_grid_size > 0:
+            # Refine p-grid uniformly on [0, 1]
+            p_list.extend(np.linspace(0.0, 1.0, config.p_grid_size))
+        # Always include problem-specific anchor points
+        p_list.extend([min(ell, 1.0), 1.0])
+        # Remove duplicates while preserving order
+        seen = set()
+        uniq = []
+        for pk in p_list:
+            if (
+                (abs(pk - 0.0) < 1e-12)
+                or (abs(pk - 1.0) < 1e-12)
+                or (abs(pk - min(ell, 1.0)) < 1e-12)
+            ):
+                # keep canonical numeric forms
+                pk = float(pk)
+            if pk not in seen:
+                seen.add(pk)
+                uniq.append(pk)
+        for pk in uniq:
+            pairs.append((j, pk))
+
+    # Build A_ub and b_ub for all (ell, p) constraints
+    rows = []
+    rhs = []
+    for j, p in pairs:
+        r, c = build_constraint_row(j, p)
+        rows.append(r)
+        rhs.append(c)
+
+    # Monotonicity: f_{i+1} - f_i >= 0  ->  -f_{i+1} + f_i <= 0
+    for i in range(m - 1):
+        r = np.zeros(var_count)
+        r[i] = 1.0
+        r[i + 1] = -1.0
+        rows.append(r)
+        rhs.append(0.0)
+
+    A_ub = np.vstack(rows)
+    b_ub = np.array(rhs)
+
+    # Objective: maximize Gamma => minimize -Gamma
+    c = np.zeros(var_count)
+    c[gamma_idx] = -1.0
+
+    # Bounds: 0 <= f_i <= 1, 0 <= Gamma <= 1
+    bounds = [(0.0, 1.0)] * m + [(0.0, 1.0)]
+
+    return {
+        "A_ub": A_ub,
+        "b_ub": b_ub,
+        "c": c,
+        "bounds": bounds,
+        "ell_pts": ell_pts,
+        "t": t,
+        "pairs": pairs,
+    }
+
+
+def solve_lp(config: LPConfig) -> LPSolution:
+    mats = build_lp_matrices(config)
+    A_ub = mats["A_ub"]
+    b_ub = mats["b_ub"]
+    c = mats["c"]
+    bounds = mats["bounds"]
+    ell_pts = mats["ell_pts"]
+    t = mats["t"]
+    pairs = mats["pairs"]
+
+    res = linprog(c, A_ub=A_ub, b_ub=b_ub, bounds=bounds, method=config.solver_method)
+    success = bool(res.success)
+    msg = res.message
+    if not success:
+        return LPSolution(
+            False,
+            msg,
+            Gamma=np.nan,
+            f=np.zeros(len(ell_pts)),
+            grid_ell=ell_pts,
+            config=config,
+            min_slack=np.nan,
+            worst_pair=(np.nan, np.nan),
+        )
+
+    x = res.x
+    m = len(ell_pts)
+    f = x[:m]
+    Gamma = x[m]
+
+    # Evaluate minimum slack on the enforced pairs to report quality
+    min_slack = float("+inf")
+    worst = (np.nan, np.nan)
+
+    def phi_of(ell: float, p: float) -> float:
+        # Reconstruct Phi on grid using piecewise-constant f
+        # A-term
+        A = 0.0
+        for i in range(m):
+            a, b = t[i], t[i + 1]
+            lo = a
+            hi = min(b, ell)
+            if hi > lo:
+                A += f[i] * (np.exp(-lo) - np.exp(-hi))
+        # f(ell) is f_j where ell is at right endpoint t[j] (we only evaluate at grid ells)
+        # Find j s.t. ell == t[j]; else use left interval.
+        j = np.searchsorted(t, ell, side="right") - 1
+        j = min(max(j, 0), m - 1)
+        B = np.exp(-ell) * p * (1.0 - f[j])
+        C = 0.0
+        if p > 0.0:
+            for i in range(m):
+                a, b = t[i], t[i + 1]
+                lo = max(a, max(0.0, ell - p))
+                hi = min(b, ell)
+                if hi > lo:
+                    C += _int_exp_linear_piece(lo, hi, p, ell) * (1.0 - f[i])
+        return A + B + C
+
+    for j, p in pairs:
+        ell = ell_pts[j]
+        val = phi_of(ell, p) - Gamma * p
+        if val < min_slack:
+            min_slack = val
+            worst = (float(ell), float(p))
+
+    if config.verbose:
+        print(f"[LP] Success={success}, message={msg}")
+    # True LP slack (based on A_ub x <= b_ub)
+    A_ub = mats["A_ub"]
+    b_ub = mats["b_ub"]
+    true_slack = A_ub.dot(np.concatenate([f, [Gamma]])) - b_ub
+    max_violation = float(true_slack.max())
+    if config.verbose:
+        print(
+            f"[LP] Max A_ub violation = {max_violation:.6e} (<=0 means all satisfied)"
+        )
+
+        print(f"[LP] m={m}, L={config.L}, pairs={len(pairs)}")
+        print(f"[LP] Gamma* = {Gamma:.6f}")
+        print(
+            f"[LP] Min slack on enforced pairs = {min_slack:.6e} at (ell={worst[0]:.4f}, p={worst[1]:.4f})"
+        )
+        print(f"[LP] f(0)≈{f[0]:.6f}, 1-f(0)≈{1-f[0]:.6f} (compare to Gamma)")
+
+    return LPSolution(
+        True,
+        msg,
+        Gamma=float(Gamma),
+        f=f,
+        grid_ell=ell_pts,
+        config=config,
+        min_slack=float(min_slack),
+        worst_pair=worst,
+    )
+
+
+def parse_args() -> argparse.Namespace:
+    default = LPConfig()
+    parser = argparse.ArgumentParser(
+        description="Linear-program discretization for maximizing Gamma in Phi_f inequalities.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--L", type=float, default=default.L, help="Upper bound of ell domain"
+    )
+    parser.add_argument(
+        "--m",
+        type=int,
+        default=default.m,
+        help="Number of intervals for piecewise-constant f",
+    )
+    parser.add_argument(
+        "--p-grid-size",
+        type=int,
+        default=default.p_grid_size,
+        help="Number of uniform samples for p in [0,1] (>=2 recommended)",
+    )
+    parser.add_argument(
+        "--solver", default=default.solver_method, help="scipy.optimize.linprog method"
+    )
+    parser.add_argument(
+        "--quiet", action="store_true", help="Silence diagnostic prints"
+    )
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+    cfg = LPConfig(
+        L=args.L,
+        m=args.m,
+        solver_method=args.solver,
+        verbose=not args.quiet,
+        p_grid_size=max(args.p_grid_size, 0),
+    )
+
+    sol = solve_lp(cfg)
+
+    if sol.success:
+        # Print a short table of (ell_j, f_j)
+        print("\nSample of f(ell) on grid:")
+        sel = list(range(0, len(sol.grid_ell), max(1, len(sol.grid_ell) // 10)))
+        for j in sel:
+            print(f"  ell={sol.grid_ell[j]:.3f}  f≈{sol.f[j]:.6f}")
+        print("\nDone.")
+    else:
+        print("[LP] Failed:", sol.message)
+
+
+if __name__ == "__main__":
+    main()
+
+```
